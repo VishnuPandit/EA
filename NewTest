@@ -1,1 +1,2357 @@
-new line
+Future State Middleware StrategyOne bank. 
+One strategy. 
+One integration fabric.
+
+
+Nov 2025
+
+
+
+Current State Pain Points
+
+
+
+Middleware Assessment – Executive Summary
+
+
+FCB’s middleware ecosystem is fragmented, duplicative, and siloed with inconsistent governance.Each business line operates independently with its 
+own tools and patterns, creating technical debt, inflating costs, and impeding scalability. The lack of a unified integration strategy hinders enterprise 
+visibility and prevents the bank from being truly acquisition ready — making it difficult to integrate new entities, retire / consolidate legacy systems, or 
+scale efficiently.
+
+
+Current State – Disconnected systems.DisjointedStrategies. Divided teams.
+
+
+Fragmented Middleware
+
+Strategy
+
+
+Poor Developer 
+Experience & Tool 
+Fragmentation
+
+
+Disconnected Operating 
+Model
+
+
+Inconsistent Governance 
+& Oversight
+
+
+Lack of Enterprise 
+Domain Architecture
+
+
+Each business line operates 
+independently with siloed 
+systems, teams, and 
+integration patterns.
+
+
+Middleware governance, 
+design standards, and API 
+lifecycle processes vary across 
+the organization.
+
+
+No standardized enterprise 
+data domains or API 
+taxonomy across lines of 
+business.
+
+
+Reinforces duplication of 
+effort, hinders enterprise 
+collaboration, and prevents the 
+bank from operating as “One 
+FCB.”
+
+
+Increases security and 
+regulatory risk, reduces 
+visibility, and weakens 
+enterprise control over 
+technology and compliance.
+
+
+Creates integration 
+incompatibility and complexity, 
+duplicates customer and 
+product data, and hinders 
+acquisition readiness and 
+data-driven scaling.
+
+
+Multiple middleware platforms 
+coexist without a unified 
+strategy
+
+
+Developers use multiple 
+portals, manytools, and have 
+limited automation across 
+environments.
+
+
+Drives high costs, technical 
+debt, inconsistent or point-to-
+point integrations and disparate 
+delivery — limiting scalability 
+and slowing time to market.
+
+
+Slows delivery, reduces API 
+adoption, and discourages reuse 
+— constraining the bank’s ability 
+to innovate and scale efficiently.
+
+
+Issues
+
+
+Impact
+
+
+Preventing alignment with the Technology Strategic Roadmap (TSR)
+
+
+3
+
+
+
+Lack of Clear Technology 
+Usage Guidelines
+
+
+Limited guidance or rationale for when each solution should be leveraged beyond the 
+initial architectural choices, resulting in proliferation of siloed technologies.
+
+
+Tactical, Not Strategic, Use 
+of Technology
+
+
+Solutions are developed to meet a specific, point-in-time need, resulting in a lack of 
+strategic evaluation of integration applicability across the organization.
+
+
+Tight Coupling of 
+Experiences to Cores
+
+
+Front-end experiences are tightly coupled to Cores, resulting in front-end systems 
+conforming to downstream vendor specific / platform functionality and data 
+structures.
+
+
+
+
+Multiple middleware platforms coexist without a unified strategy and clearly defined / communicated usage guidelines, resulting in high costs, 
+technical debt, and inconsistent or point-to-point integrations and disparate delivery
+
+
+Fragmented Middleware Strategy
+
+
+Server with solid fill
+Branching diagram with solid fill
+Blog with solid fill
+4
+
+
+
+Lack of Enterprise 
+Middleware Catalogue
+
+
+Absence of a central portal to discover and leverage existing middleware results in the 
+inability to leverage reusable middleware integrations that have already been 
+created.
+
+
+Lack of Value Within the 
+Developer Portal 
+Documentation
+
+
+Limited content within the developer portal results in ambiguity around the value for 
+developers and creates a lack of adoption across the developer community.
+
+
+Lack of Developer Portal 
+Adoption
+
+
+As the developer portal is read-only and lacks self-service capabilities, it provides 
+limited value to API developers, leading to low adoption, inconsistent integration 
+practices, and slower delivery of customer-facing solutions.
+
+
+
+
+5
+
+
+Browser window with solid fill
+Basic Shapes with solid fill
+Braille with solid fill
+Weak Developer Experience & Tool Fragmentation
+
+
+Direct connections to source systems and an inefficient developer portal slow delivery, reduce API adoption, and discourage reuse - 
+constraining the bank’s ability to innovate and scale efficiently
+
+
+
+Disparate Operating 
+Patterns
+
+
+Middleware teams within both General Bank and Commercial Bank generally continue 
+to follow siloed operating processes, resulting in redundant technologies, 
+standards, operations and responsibilities.
+
+
+Lack of Enterprise Review & 
+Enablement
+
+
+Middleware and APIs do not receive the level of review that would allow 
+determination of common enterprise use cases, perpetuating siloed operating 
+patterns.
+
+
+Lack of Architecture 
+Involvement within 
+Middleware
+
+
+Solution Architects do not currently have deeper involvement within the 
+middleware design and development, resulting in disparate standards and 
+processes.
+
+
+Lack of Clearly Defined 
+Ownership and 
+Accountability
+
+
+Middleware tooling and API ownership, along with roles and responsibilities 
+areunclear, driving duplication, inconsistent outcomes, and audit/auditability risk.
+
+
+
+
+6
+
+
+Chemicals with solid fill
+Clipboard with solid fill
+Gears with solid fill
+Disconnected Operating Model
+
+
+Middleware is aligned to platforms, reinforcing the duplication of efforts, hindering enterprise collaboration and preventing the bank from 
+operating as one “unified entity”
+
+
+Management with solid fill
+
+Inconsistent Middleware 
+Governance 
+
+
+Inconsistent process definitions and lack of clearly defined responsibilities of 
+middleware governance poses audit and regulatory risks
+
+
+Lack of Clearly Defined 
+Integration Patterns
+
+
+Ambiguities in expected inputs, outputs and operating guidelines across 
+integrations and prohibit the creation / enforcement of overarching governance.
+
+
+Lack of Standardized 
+Authorization
+
+
+Varying patterns of middleware authorization and entitlements are used resulting in 
+a lack of standardized access control, over-privileged accounts, and weak 
+segregation of duties.
+
+
+Lack of Standardized 
+Security
+
+
+Varying middleware security controls leave protection gaps that heighten incident 
+likelihood and trigger audit and compliance issues.
+
+
+Limited Centralized API 
+Inventory
+
+
+Limited reporting of APIs including Validation against Technical user Guidelines and 
+standards leads to increase regulatory risk.
+
+
+
+
+Blockchain with solid fill
+Chemicals with solid fill
+Contract with solid fill
+Disk with solid fill
+7
+
+
+Clipboard Partially Checked with solid fill
+Inconsistent Governance & Oversight
+
+
+Inconsistent middleware governance, design standards, and API lifecycle processes across the organization increases the security & 
+regulatory risk and weakens the enterprise control over technology and compliance
+
+
+
+Lack of 
+StandardizedEnterprise 
+Data Definitions
+
+
+The absence of a standardized enterprise data domain model leads to inconsistent 
+definitions and duplicated semantics across the organization.
+
+
+Lack of Enterprise Domains
+
+
+Without a defined enterprise domain layer, system developers build inconsistent 
+point-to-point integrations that leads to tight coupling, higher system complexity, and 
+greater change effort.
+
+
+Lack of Enterprise-Wide 
+Orchestration Patterns
+
+
+Lacking enterprise-wide orchestration patterns forces ad-hoc process logic in 
+individual systems, resulting in inconsistent workflows and poor end-to-end visibility 
+/ resilience.
+
+
+
+
+Building with solid fill
+Cloud Computing with solid fill
+8
+
+
+Flowchart with solid fill
+Lack of Enterprise Domain Architecture
+
+
+No standardized enterprise data domains or API taxonomy across lines of business creates integration incompatibility, complexity, and 
+hinders acquisition readiness and data-driven scaling
+
+
+
+Implications of the 5 Key Identified Issues at FCB
+
+
+Specific examples reflecting how structural and operational issues manifest across middleware, governance, and developer experience
+
+
+Weak Developer 
+Experience & Tool 
+Fragmentation
+
+
+•FCB doesn’t have a developer portal and does manual updates to API documentation on confluence
+•SVB has a developer portal with limited usage and lacking self service 
+
+
+
+Disconnected 
+Operating Model
+
+
+•SVB has detailed governance with no central control and permissible exception process for service development while 
+FCB has central API development with ad-hoc governance
+•SVB Go / Digital channels manage their own services, persist enterprise data and serve as a data consumption layer 
+for non-SVB Go use cases
+
+
+
+Fragmented 
+Middleware Strategy
+
+
+•Combined bank has multiple gateways and lack of clarity in usage
+•Legacy FCB integrations are tightly coupled to cores (e.g. Hogan/CIS) limiting delivery of flexible, resilient and 
+performant solutions
+
+
+
+Inconsistent 
+Governance & 
+Oversight
+
+
+•Across combined bank, APIs are using PII as keys
+•API Authorization fragmented across legacy banks: 
+•CITusesMuleSoftproviding basic authorization, FCBoffersmTLSand limited Okta Oauth, SVBoffersApigeewith 
+OAuth and SVBGo manages authorization only within its own application stack
+
+
+
+
+
+
+Lack of Enterprise 
+Domain 
+Architecture
+
+
+•FCB ESB APIs based on old IFX XML model, with heavy reliance on name value pairs, confusing element names, making 
+it difficult to document in OpenAPI/Swagger spec while SVB leverages modern open banking
+•Due to lack of master data management, customer information is maintained in 3 different systems causing 
+discrepancy in data identification and no common data dictionary
+
+
+
+Plugged Unplugged with solid fill
+Programmer female with solid fill
+Remote work with solid fill
+Search Inventory with solid fill
+Remote work with solid fill
+Search Inventory with solid fill
+9
+
+
+
+10
+
+
+Foundations are already in place for the Future State
+
+
+While remediation is necessary for the five key areas, somecurrent architecture and tooling will provide a solid foundation for FCB’s transition 
+to the future-state middleware strategy
+
+
+Strong Engagement and Focus
+
+
+Middleware teams are highly motivated and receptive to change
+
+Structured operating models will help sustain this momentum and 
+strengthen alignment across teams
+
+
+
+
+Teams leverage either Layer7 or Apigee in current use cases
+
+Homogenization will support the enterprise-domain architecture
+
+
+Contained Use of Gateway Systems
+
+
+
+
+Usage of ODS Technologies
+
+
+Teams utilize operational data storesto read / write data
+
+Expanding usage will enable a cost-effective solution with higher throughput
+
+
+
+
+Teams effectively use microservices
+
+A strong developer portal / code framework will standardize and accelerate
+
+
+Development Flexibility Across Use 
+Cases
+
+
+
+
+Custom Developer Portal
+
+
+Teams have already built a Developer Portal PoC on Backstage
+
+A unified self-service API portal streamlines developer experience and 
+strengthens compliance
+
+
+
+
+Continuous Improvement with solid fill
+Continuous Improvement with solid fill
+Disk with solid fill
+Internet with solid fill
+Layers Design with solid fill
+
+Future State – One bank. One strategy. One integration fabric.
+
+
+Implement a unified, event-driven middleware strategy anchored onEnterprise Domainswith a centralized governance, clearly 
+defined operating model and standardized tooling 
+
+This approach enables reusable integrations that accelerate delivery and position FCB for future acquisitions and enterprise-scale 
+agility—transforming middleware from a constraint into a strategic advantage.
+
+
+11
+
+
+Servers and ordering apps present 
+offerings to customers in terms that cater 
+to each individual's needs
+
+
+Appliancesdo one precise job— cook, 
+refrigerate, wash
+
+
+The Experiencelayer can be used for 
+customizationto meet customers’ needs
+
+
+The Enterprise layer hides complexitiesof 
+the systems and orchestrates across them 
+to deliver the customizations needed by 
+the experiences
+
+
+The System layer provides specific 
+capabilities and/or storage for the 
+enterprise layer to use, as needed
+
+
+Chefs coordinate orders, enforce recipes 
+using appliances
+
+
+A Restaurant analogy to explain the Target State Architecture
+
+
+
+Future State – Unified Middleware 
+Strategy and Operating Model
+
+
+
+Hogan
+
+
+Signature
+
+
+IBS
+
+
+FlexCube
+
+
+System Layer
+
+
+Hogan Core 
+Connectors
+
+
+Signature Core 
+Connectors
+
+
+IBS Core 
+Connectors
+
+
+FlexCube Core 
+Connectors
+
+
+Enterprise Domain Layer
+
+
+Party
+
+
+Payment
+
+
+Account
+
+
+Document
+
+
+Risk
+
+
+Product
+
+
+Workflow
+
+
+Routing
+
+
+Events Platform
+
+
+Consumers*
+
+
+Experience Layer (optional)
+
+
+Experience Layer
+
+•Theend-user or channel experience(mobile, web, 
+partner, employee apps)
+•Curates andtailorsdatafrom the enterprise layer 
+into the format and type needed for each channel, 
+and adds channel-specific logic
+•This layer is focused on usability, performance and 
+security for the consumer.
+
+
+
+Orchestration
+
+
+ODS Connector
+
+
+Target State Architecture
+
+
+The unified strategy, will leverage an enterprise-wide middleware layer withclearly defined business domains, acrossall banks, obfuscating complexities of core system 
+from consumers and provide orchestration across the Banks' systems—accelerating M&A integration, enhancing interoperability, anddeliveringscalability
+
+
+Operational 
+Data Store
+
+
+Domains
+
+
+Enterprise Layer
+
+•Clearly defineddomains and service domains 
+aligned with business areas,providing astandard 
+interface for all consumers
+•Abstracts complexitiesof the underlying systems
+
+
+
+System Layer
+
+•Providesdirectandsecure accessto core Systems 
+of Record (SORs,e.g.core banking, payments, 
+CRM, cards).
+•Exposesrawandlow-levelfunctions such as 
+“getBalance” or “postTransaction” within SORs
+•Providesdirect accessto read and write data
+
+
+
+Orchestration
+
+Orchestratesworkflowsacross 
+applications,systems,and services, allowing for 
+reuseacross channels
+
+
+Digital One
+
+
+SVBGo
+
+
+Q2
+
+
+Cores
+
+
+Data
+
+
+nCino
+
+
+Bottom Line
+
+
+*Non Exhaustive
+
+
+Mobile Enablement
+
+
+Translation Services
+
+
+Account Management
+
+
+Pagination Service
+
+
+13
+
+
+Reference Data
+
+
+
+Middleware Layer
+
+
+What It Is
+
+
+What It Is Not
+
+
+Experience
+
+(Optional per Channel)
+
+An optional layer to assists with 
+transforming enterprise domains for 
+specific channel needs
+
+
+Experience Middleware:
+
+•Manages logic and security contexts unique to channels
+•Tailors and aggregates data for user functionality andspecific 
+requirements per channel
+•Simplifies and optimizes payloads for individual channels
+•Adheres to subset of API guidlines
+•Couples interactions tightly to the consumer
+
+
+
+Experience Middleware Does Not:
+
+•Act as a system of record
+•Connect directly to core systems or system layers
+•Implement or own core business logic
+•Replicate and / or create new enterprise domain processes
+•Duplicate integration logic
+•Enable usage by multiple platforms
+
+
+
+Enterprise Domain
+
+Standardized domains and service 
+domains, that align with business 
+areas, allowing for a consistent way 
+for channels to integrate into the 
+Banks' systems, hiding the 
+complexities of system APIs / logic
+
+
+Enterprise Middleware:
+
+•Exposes canonical data models and common capabilities
+•Enables observability, auditability, and reuse measurement
+•Performs cross-domain integration and orchestration
+•Remains consumer and system (backend / frontend) agnostic
+•Adheres to the highest level of guidelines
+•Operates as the preferred integration point across banks
+
+
+
+Enterprise Middleware Does Not:
+
+•Retain long term, persistent enterprise data
+•Have multiple representations of the same domain and data
+•Align to a specific system
+•Modify or alter behavior per consumer
+
+
+
+System
+
+Core and system-specific services 
+that handle read and writes from / 
+to Systems of Record (SORs) and 
+any system specific logic
+
+
+System Middleware:
+
+•Exposes core / vendor systems of record (SORs) data and 
+functions
+•Handles authentication and authorization to core systems
+•Provides stable and reusable services toread and write data 
+from / toSORs 
+•Implements system-specific logic
+
+
+
+System Middleware Does Not:
+
+•Bypass enterprise security or governance standards
+•Store or transform data beyond integration needs
+•Aggregate or orchestrate actions across multiple systems
+•Implement business or process logic
+•Serve channel-specific needs
+
+
+
+
+
+Target State Architecture: Middleware Layer Definitions
+
+
+Three primary middleware layers define the target state architecture and help support all activities from organizational levels to individual systems to reduce costs and 
+improve functionality through standardization. As they serve multiple functions and purposes, the Layer Definition Matrix helps define what each layer accomplishes and 
+what it does not
+
+
+14
+
+
+
+Target State Architecture: Three-Dimensional Enablement Approach
+
+
+The unified middleware strategy — powered by the enterprise middleware layer — will be enabled through the following strategic pillars:
+
+
+1- Operating Model
+
+
+2- Enhanced Governance 
+
+
+3- Unified Enterprise Middleware 
+Technology
+
+
+An operating model with define roles, 
+ownership, and accountability to 
+enable faster decision-making, 
+consistent delivery, and cross-
+functional collaboration.
+
+
+A defined governance model with a 
+balance between centralized 
+enterprise control and federated 
+business innovation
+
+
+Atechnology stack — supported by a 
+centralized developer portal strategy 
+— will provide reusable components, 
+APIs, and services to accelerate 
+development and reduce duplication.
+
+
+Layered Architecture team 
+definitions
+Enterprise Team Roles and 
+Responsibilities
+Layered Architecture interaction 
+patterns
+
+
+
+What it 
+Includes
+
+
+Federated Governance Model
+Governance Body Definitions
+Middleware Governance Patterns
+
+
+
+Unified Developer Portal Strategy
+Technology Rationalization 
+Summary
+Target State Technology platforms
+Identification process for 
+enterprise APIs
+Sample Data Domains and 
+resources
+
+
+
+What it 
+represents
+
+
+15
+
+
+
+Target State Operating Model
+
+
+
+1.1 Target State Operating Model: Context
+
+
+FCB currently faces challenges with an absence of enterprise domains, siloed middleware operations, and unclear ownership. By adopting a unified middleware strategy 
+and an enterprise middleware layer, FCB can drive consistency, clarify accountability, and establish well-defined enterprise domains / owners.
+
+
+Challenges
+
+
+Outcome
+
+
+Solutions
+
+
+Lack of Enterprise Domains: Without a defined 
+enterprise domain layer, system developers build 
+inconsistent point-to-point integrations that leads to 
+tight coupling, higher system complexity, and greater 
+change effort.
+
+
+Defined Enterprise Domain Layer: Provide 
+clearly defined domains and service 
+domainsaligned to business areas, 
+thataccess the Banks' systems, in a 
+consistent way.
+
+
+Decoupled Systems 
+and greater reusability 
+across the organization
+
+
+Disparate ways of Operating: Middleware teams 
+within both General Bank and Commercial Bank 
+generally continue to follow siloed operating 
+processes, resulting in redundant technologies, 
+standards, operations and responsibilities.
+
+
+Unified Operating Patterns: enterprise 
+integrations will be standardized through 
+common patterns, shared tooling, and 
+consistent operating practices
+
+
+Reduced operational 
+redundancy and 
+improved consistency
+
+
+Lack of Clearly Defined Ownership and 
+Accountability: Middleware tooling and API 
+ownership, along with roles and responsibilities 
+areunclear, driving duplication, inconsistent 
+outcomes, and audit/auditability risk.
+
+
+Clear Ownership Structure: Clearly defined 
+ownership, roles, and governance boundaries
+
+
+Clear accountability and 
+oversight
+
+
+17
+
+
+
+Consumers
+
+
+Q2
+
+
+Team 1
+
+
+SVBGo
+
+
+Team 2
+
+
+Direct Bank
+
+
+Team 3
+
+
+Digital One
+
+
+Team 4
+
+
+Experience 
+Layer
+
+
+Team 1a
+
+
+Team 2a
+
+
+Team 3a
+
+
+Team 4a
+
+
+Enterprise 
+Layer
+
+
+Party
+
+
+Team 6
+
+
+Product
+
+
+Team 6
+
+
+Account
+
+
+Team 6
+
+
+Payment
+
+
+Team 6
+
+
+...
+
+
+Team 6e
+
+
+System Layer
+
+
+Team 7a
+
+
+Team 8a
+
+
+Team 9a
+
+
+Team 10a
+
+
+Hogan
+
+
+Team 7
+
+
+Signature
+
+
+Team 8
+
+
+IBS
+
+
+Team 9
+
+
+FlexCube
+
+
+Team 10
+
+
+Tibco Sub Station
+
+
+Signature Interface
+
+
+Code Connect
+
+
+FlexCube Interface
+
+
+Q2 Bridge/HQ
+
+
+SVBGo Spring 
+Boot Services
+
+
+Direct Bank 
+Services
+
+
+...
+
+
+1.2 Target State Operating Model: Organizational Structure
+
+
+To achieve the target state and enable the enterprise middleware layer to operate effectively, each layer must be accountable for distinct responsibilities, standards, and 
+outcomes, with the Enterprise Layer team driving cross-domain integrations and governance.
+
+
+Experience Layer
+
+•Owned by federated business or product teams 
+•Continue to build APIs with support from API enablement teams when 
+needed
+•Curates andtailorsdatafrom the enterprise layer into the format and type 
+needed for each channel, and adds channel-specific logic
+•Prioritizes agility and rapid product delivery to end consumers
+
+
+
+New – Enterprise Layer
+
+•Centralized ownership through Enterprise Middleware Team
+•Defines and creates domains and service domains
+•Responsibilities:
+•Own and create enterprise APIs
+•Define standards for cross-domain orchestration, and business 
+process orchestration that span multiple systems
+
+
+
+
+
+
+System Layer
+
+•Owned by federated Systems of Record (SORs) or system teams (e.g. 
+core, ERP, CRM, GL, HR)
+•Provides system APIs and integration services
+•Focused on reliability, security, and data integrity
+•Accessed directly by enterprise layer services
+•lightweight orchestration only when atomic transactions are unavailable, and 
+limit it to within the bounded context of the core
+
+
+
+18
+
+
+
+1.3 Target State Operating Model: Team Expectations
+
+
+A dedicated Enterprise Layer team will be created to steward cross-domain integrations and governance, establishing clear interaction models and expectations between 
+the Experience and System layers.
+
+
+Existing teams continue to deliver 
+channel-specific and customer-facing 
+APIs, applications, and integrations that 
+enable rapid business innovation using 
+standardized enterprise services.
+
+
+•Design and delivercustomer/employee 
+channel-facing APIs that enable rapid 
+business and digital experience innovation
+•Leverage and interface with enterprise 
+APIs in a standard way to consume and 
+update Bank data.
+•Own and operatethe experiences, APIs, 
+andintegrations within their channel, 
+ensuring agility, performance, and 
+alignment with enterprise standards.
+
+
+
+Description
+
+
+Team Responsibilities
+
+
+Experience Teams
+
+
+New – Enterprise Team
+
+
+System Teams
+
+
+New team accountable for creating 
+domains, standardized enterprise APIs, 
+and orchestration patterns that drive 
+consistency and interoperability across 
+the bank.
+
+
+•Align with defined business data 
+domains and abstract the complexities 
+of underlying systems
+•Support the evolution of Enterprise 
+APIs and promote reusability by 
+consuming channels and digital vendors
+
+
+•Standardize how the orchestration 
+layer is used consistently to manage 
+business process flows across multiple 
+systems
+•Act as the enterprise layer governance 
+authority to ensure consistency and 
+quality
+
+
+
+Existing teams continue to expose core 
+Systems of Record (SORs) through 
+stable, secure, and reusable system APIs 
+that provide trusted data and 
+functionality.
+
+
+•Own the underlying platforms and 
+systems that run the Bank
+•Expose and maintain system APIs and 
+services, along with system-specific logic, 
+that provide secure, stable, and reusable 
+access to Systems of Record (SORs)
+•Ensure reliability, data integrity, and 
+performance of integrations tied to critical 
+enterprise platforms and applications
+
+
+
+Teams that exist today
+
+
+19
+
+
+
+1.7 Target State Architecture: Interaction Patterns with the Enterprise Middleware
+
+
+Vendors that have theirown tooling that 
+we cannot change nor govern because its 
+proprietary
+
+
+External or internal partners that need 
+data and are unable to develop 
+Experience APIs. The bank builds an 
+Experience Mediator to provide data to 
+
+
+For applications which FCB owns, a 
+Gateway should be recommended and API 
+guidelines provided (API guidelines for 
+experience APIs are less stringentthan 
+Enterprise APIs)
+
+
+External partner (client or outside 
+entity) applications can directly connect 
+to enterprise APIs without the need for 
+experience APIs.
+
+
+Vendor or Internal applications may need 
+to interact directly with system APIs that 
+do not provide enterprise APIs (Proxy 
+Enterprise Layer requirements can be 
+relaxed for Internal-to-Internal 
+interactions)
+
+
+Enterprise Layer
+
+
+System Layer
+
+
+Vendor Application
+
+
+Core
+
+
+Enterprise Layer
+
+
+System Layer
+
+
+FCB Application
+
+
+Core
+
+
+Enterprise Layer
+
+
+System Layer
+
+
+FCB Experience 
+Mediator
+
+
+Enterprise Layer
+
+
+System Layer
+
+
+External Application
+
+
+System Layer
+
+
+Core
+
+
+Core
+
+
+External 
+Application
+
+
+Vendor provided SAPI (e.g. FIS, 
+Payplus) where SaaS owned and 
+leased by FCB/Core
+
+
+Proxy Enterprise 
+Layer
+
+
+Pattern 1
+
+
+Pattern 2
+
+
+Pattern 3
+
+
+Pattern 4
+
+
+Pattern 5
+
+
+External Vendor hosted and 
+maintained solution (e.g. Q2)
+
+
+Bank-Owned Applications
+
+
+Experience Mediation built and 
+supported by the Bank
+
+
+Direct Consumers of Enterprise 
+APIs
+
+
+Vendor and Internal App Direct to 
+System API (Exception)
+
+
+Defining standardized API interaction models across external, enterprise, and core systems can ensure consistent governance and controls.
+
+
+Experience Layer
+
+
+Experience Layer
+
+
+Internal 
+Application
+
+
+External 
+Application
+
+
+Internal 
+Application
+
+
+FCB
+
+
+Vendor / Partner
+
+
+20
+
+
+
+2. Enterprise Domain Team Responsibilities (1/2) 
+
+
+The Enterprise Domain Team provides domains and service domains aligned to business areas and Enterprise APIs, as well as standards for enterprise-wide 
+orchestrations across core business systems and platforms.
+
+
+EstablishDomains and Service Domains
+
+
+Responsibility
+
+
+Description
+
+
+Owner(Roles)
+
+
+Dependency
+
+
+Align Enterprise APIs 
+to Domains
+
+
+Own the alignment of enterprise APIs to business data domains by enforcing 
+canonical models, shared definitions, and standardized contracts across domains.
+
+
+Domain Product Owner
+
+
+Dependent on Business teams and 
+review with enterprise architecture so 
+that
+
+
+Establish Domain 
+Definitions and 
+Contracts
+
+
+Define the canonical data models and data dictionary for enterprise schemas within 
+orchestration flows and coordinate with data team to refine data models
+
+
+Domain Architect
+
+
+Dependent on alignment with data 
+modeling team so that these domains 
+can be leveraged by channel teams
+
+
+
+
+
+Design, Own, and Evolve Enterprise APIs
+
+
+Responsibility
+
+
+Description
+
+
+Owner(Roles)
+
+
+Dependency
+
+
+Enterprise API 
+Management
+
+
+Own and maintain the portfolio of enterprise APIs that enable standardized, cross-
+domain access to enterprise capabilities. Define API taxonomy, naming 
+conventions, versioning, and SLAs.
+
+
+Domain Product Owner
+
+
+API Inventory of any federated 
+enterprise development; Review with 
+enterprise architecture required
+
+
+Enterprise API Catalog 
+and* Discoverability
+
+
+Maintain a central catalog of enterprise APIs and orchestration assets. – Developer 
+portal managed and maintained by separate team. Publish and documentation and 
+ensure discoverability, documentation, and consumption transparency across 
+teams.
+
+
+Domain Product Owner, 
+Integration Liaison
+
+
+Platform team making the API 
+developer portal accessible and usable
+
+
+Enterprise API 
+Lifecycle Management
+
+
+Govern the full lifecycle — design, publish, maintain, and retire — ensuring stability 
+and controlled evolution across consuming systems.
+
+
+API Designer
+
+
+Dependent on coordination with 
+DevSecOps team
+
+
+Continuous 
+Improvement and 
+Rationalization
+
+
+Periodically assess usage, redundancy, and performance of enterprise APIs to 
+drive simplification and reuse.
+
+Monitor/delivery Measurement of business value
+
+
+Domain Architect
+
+
+Dependent on definitions for business 
+value metrics and KPIs from the 
+middleware governance team
+
+
+
+
+22
+
+
+
+2. Enterprise Domain Team Responsibilities (2/2) 
+
+
+The Enterprise Domain Team provides domains and service domains aligned to business areas and Enterprise APIs, as well as standards for enterprise-wide 
+orchestrations across core business systems and platforms.
+
+
+Provide Standardization for Orchestration Layer
+
+
+Responsibility
+
+
+Description
+
+
+Owner(Roles)
+
+
+Dependency
+
+
+Process Orchestration 
+Management
+
+
+Design, develop and maintain standards for orchestration logic for end-to-end enterprise 
+processes (e.g., loan onboarding, account opening). Manage sequencing, dependencies, and 
+error handling across multiple systems.
+
+
+Domain Architect, 
+Integration Engineer
+
+
+Integration & Interaction 
+patterns should be defined 
+as a prerequisite
+
+
+Reusable Orchestration* 
+Patterns
+
+
+Provide reference designs, reusable templates, and example flows that federated teams can 
+adopt or extend. Promote reuse through a shared integration catalog or repository.
+
+
+Integration Engineer, 
+Business analyst
+
+
+Integration & Interaction 
+patterns should be defined 
+as a prerequisite
+
+
+Cross-Domain 
+Dependency 
+Management
+
+
+Track and coordinate dependencies between enterprise APIs, orchestrations, and domain-level 
+integrations. Lead impact analysis and communication for cross-system changes.
+
+
+Integration Liaison
+
+
+Cross domain use cases to 
+be identified and prioritized 
+by domain owner
+
+
+
+
+
+Act as the Enterprise Layer Governance Authority
+
+
+Responsibility
+
+
+Description
+
+
+Owner(Roles)
+
+
+Dependency
+
+
+Enterprise Integration 
+Design Authority
+
+
+Serve as the design authority for enterprise-level integration logic and orchestration. Validate 
+cross-domain designs for alignment with enterprise patterns and avoid duplication.
+
+
+Integration 
+Engineer
+
+
+Integration & Interaction 
+patterns should be defined as 
+a prerequisite 
+
+
+Cross-Domain Process 
+Alignment
+
+
+Collaborate with business architects to translate process models into executable integrations and 
+APIs.
+Ensure consistency between business capabilities and technical orchestration flows.
+
+
+Business Analyst
+
+
+-
+
+
+Change Coordination 
+Across Domains
+
+
+Coordinate releases and changes for integrations that impact multiple business units or systems.
+Manage dependencies, release calendars, and readiness across federated teams.
+
+
+Release 
+Coordinator
+
+
+Change Management Process
+
+
+Continuous Improvement 
+and Rationalization
+
+
+Periodically assess usage, redundancy, and performance of enterprise APIs to drive simplification 
+and reuse.
+
+
+Domain Architect 
+& Domain Product 
+Owner
+
+
+Dependent on definitions for 
+business value metrics and 
+KPIs from the middleware 
+governance team
+
+
+
+
+23
+
+
+
+2. Enterprise Domain Team Roles
+
+
+The team will serve as an enabler of standardized integrations — creating reusablecross-bank domains, data models, and APIs, while also establishing orchestration 
+patterns that align with business objectives.
+
+
+Domain 
+Leadership
+
+
+Engineering & 
+Design
+
+
+Cross Domain 
+Functions
+
+
+Domain Product Owner
+
+
+Domain Architect**
+
+
+Party
+
+
+Account
+
+
+Sample Domains*
+
+
+Business Analyst(s)
+
+
+Release Coordinator
+
+
+Integration Liaison
+
+
+Domain Product Owner
+
+
+Domain Architect**
+
+
+Lead API / Integration Engineer(s)
+
+
+Data Modeler / API Designer(s)
+
+
+Quality Engineer(s)
+
+
+Lead API / Integration Engineer(s)
+
+
+Data Modeler / API Designer(s)
+
+
+Quality Engineer(s)
+
+
+*Domains can be logically combined, if needed; engineering, 
+design, and cross-functional team members may require more 
+than one per defined role
+
+
+24
+
+
+Function
+
+
+Data Team Liaison
+
+
+**Domain Architect will play dual role of a data architect ( coordinating 
+with the data modeling teams) and a domain architect 
+
+
+Owns domain backlog, outcomes, and API adoption; prioritizes reuse and NFRs.
+
+
+Responsibilities
+
+
+Owns API contracts; ensures alignment with CELT patterns and enterprise standards.
+
+
+Technical leadership for domain services; drives design reviews and code quality.
+
+
+Define schemas (OpenAPI/AsyncAPI), payload mappings, and event models.
+
+
+Develop and embed automated QA frameworks to validate API contracts, integration, 
+regression, and performance, 
+
+
+Maps processes to domain capabilities; clarifies rules and edge cases.
+
+
+Plans releases with platform teams and DevSecOps Teams and manages change tickets 
+& comms.
+
+
+Facilitates integration planning, testing, and onboarding between Experience, Enterprise, 
+and System Interface teams.
+
+
+Coordinates with data transformation team on the data models mapping and requirements 
+across domains.
+
+
+
+2. Enterprise Domain Team Responsibilities
+
+
+Each member of the Enterprise Layer should have defined accountability and responsibilities, as defined in the below RACI chart:
+
+
+Responsibilities
+
+
+Enterprise Domain 
+Leadership
+
+
+Engineering & Design
+
+
+Cross 
+Domain Functions
+
+
+Domain Product 
+Owner
+
+
+Domain 
+Architect
+
+
+Integration 
+Engineer
+
+
+Data Modeler 
+/API Designer
+
+
+Quality 
+Engineer
+
+
+Business 
+Analyst
+
+
+Release 
+Coordinator
+
+
+Integration 
+Liaison
+
+
+CreateDomains and Service Domains
+
+
+C
+
+
+A
+
+
+I
+
+
+I
+
+
+I
+
+
+R
+
+
+I
+
+
+I
+
+
+Create Enterprise APIs
+
+
+A
+
+
+R
+
+
+C
+
+
+C
+
+
+I
+
+
+C
+
+
+I
+
+
+I
+
+
+Data Transformation and Mapping
+
+
+C
+
+
+A
+
+
+R
+
+
+R
+
+
+C
+
+
+C
+
+
+I
+
+
+I
+
+
+Test and Certify Enterprise APIs
+
+
+A
+
+
+C
+
+
+I
+
+
+C
+
+
+R
+
+
+I
+
+
+R
+
+
+I
+
+
+Enterprise API Management
+
+
+A
+
+
+R
+
+
+R
+
+
+C
+
+
+C
+
+
+I
+
+
+C
+
+
+C
+
+
+Enterprise API Catalogue and Discoverability
+
+
+A
+
+
+R
+
+
+C
+
+
+R
+
+
+I
+
+
+I
+
+
+I
+
+
+I
+
+
+Enterprise API Lifecycle Management
+
+
+A
+
+
+I
+
+
+C
+
+
+R
+
+
+C
+
+
+I
+
+
+A
+
+
+I
+
+
+Continuous Improvement and Rationalization
+
+
+A
+
+
+R
+
+
+C
+
+
+I
+
+
+C
+
+
+C
+
+
+C
+
+
+I
+
+
+Process Orchestration Management
+
+
+C
+
+
+A
+
+
+R
+
+
+C
+
+
+I
+
+
+C
+
+
+I
+
+
+I
+
+
+Reusable Orchestration Patterns
+
+
+C
+
+
+A
+
+
+R
+
+
+C
+
+
+C
+
+
+I
+
+
+I
+
+
+I
+
+
+Cross-Domain Dependency Management
+
+
+I
+
+
+A
+
+
+R
+
+
+C
+
+
+C
+
+
+C
+
+
+A
+
+
+R
+
+
+Enterprise Integration Design Authority
+
+
+I
+
+
+A
+
+
+R
+
+
+C
+
+
+I
+
+
+C
+
+
+I
+
+
+I
+
+
+Cross-Domain Process Alignment
+
+
+C
+
+
+A
+
+
+R
+
+
+I
+
+
+I
+
+
+R
+
+
+I
+
+
+I
+
+
+Change Coordination Across Domains
+
+
+I
+
+
+C
+
+
+I
+
+
+I
+
+
+I
+
+
+I
+
+
+A
+
+
+R
+
+
+Collaboration & Enablement
+
+
+A
+
+
+R
+
+
+C
+
+
+I
+
+
+I
+
+
+R
+
+
+I
+
+
+C
+
+
+
+
+25
+
+
+R
+
+
+Responsible
+
+
+A
+
+
+Accountable
+
+
+C
+
+
+Consulted
+
+
+I
+
+
+Informed
+
+
+
+
+
