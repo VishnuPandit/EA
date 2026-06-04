@@ -1,14 +1,1 @@
-Agenda:
-Recently we had couple of production issues as applications are not properly considering different NFR needs while using Kafka. 
-
-Scenarios: 
-Producer is using single topic to publish all types of payments messages that includes wires, ach, rtp, digital assets etc. 
-Consumers are not aware of how many messages will be produced or might have requirements to process certain type of messages that are time sensitive. In recent production issue there was delay on producer side batch processes or sudden spike of traffic causing 1000s of messages published to topic. This created challenges some payments are time sensitive for processing before cut-off. 
-
-
-Another upcoming use case for digital assets implementation where new payments system (PDC) is producing different types of enrichment messages related to wires, ach, digital assets etc in a single topic. In case of digital assets we can not show transaction to user unless message is enriched with payment details. 
-This will have user experience impact. 
-
-We are requesting for  guidelines to use different Kafka topics either for prioritized messages or based on type of messages like wires, ach, rtp etc. That will make sure we do not get queues built or time sensitive messages are processed in timely manner. This will be better from scalability, performance of sensitive message processing, and user experience.
-
 
