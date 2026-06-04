@@ -1,333 +1,168 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Architecture: EDA Decision Engine</title>
-    <style>
-        :root {
-            --primary: #003366;
-            --secondary: #00509e;
-            --accent: #ff9900;
-            --background: #f4f7f6;
-            --card-bg: #ffffff;
-            --text-main: #333333;
-            --text-muted: #666666;
-            --border: #e0e0e0;
-            --success: #28a745;
-            --danger: #dc3545;
-        }
+This is the level of rigor the Architecture Review Board (ARB) expects. When presenting a Golden Topology and Enterprise Patterns to leadership, you must balance high-level strategic vision with boots-on-the-ground engineering realities.
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--background);
-            color: var(--text-main);
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-        }
+Here is the comprehensive architectural breakdown, complete with the visual topologies and the ARB playbook for implementation.
 
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
+---
 
-        h1, h2, h3 {
-            color: var(--primary);
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 10px;
-        }
+### **Context Understanding & Key Assumptions**
 
-        .question-group {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f9fbfc;
-            border-left: 4px solid var(--secondary);
-            border-radius: 4px;
-        }
+* **M&A Connectivity:** Acquired entities will not be immediately migrated to our core systems. We will use a "Hub and Spoke" integration model (Cluster Linking) to securely stream their data into our ecosystem.
+* **Tiered SLA Infrastructure:** Not all data is created equal. We operate a Tier 1 (Mission Critical, Active-Active) and Tier 2 (Analytical, Active-Passive) infrastructure to optimize costs and isolate blast radii.
+* **Operational Maturity:** Application teams are expected to manage their own Consumer Group offsets and implement idempotency. The Platform team manages the Kafka brokers, Zookeeper/KRaft, and the centralized Schema Registry.
 
-        .question-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
+---
 
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            font-size: 16px;
-        }
+### **1. The Golden Topology: Enterprise Hub & Spoke**
 
-        button {
-            display: inline-block;
-            background: var(--secondary);
-            color: #fff;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 20px;
-            transition: background 0.3s;
-        }
+This architecture physically separates the Control Plane from the Data Planes and isolates acquired entities (Spokes) from the central Enterprise Hub.
 
-        button:hover {
-            background: var(--primary);
-        }
+```mermaid
+graph TD
+    %% Define Styles
+    classDef controlPlane fill:#f9f0ff,stroke:#9b59b6,stroke-width:2px;
+    classDef tier1 fill:#ffebee,stroke:#e74c3c,stroke-width:2px;
+    classDef tier2 fill:#e3f2fd,stroke:#3498db,stroke-width:2px;
+    classDef edge fill:#e8f5e9,stroke:#2ecc71,stroke-width:2px;
+    classDef external fill:#fcf3cf,stroke:#f1c40f,stroke-width:2px;
 
-        #results-area {
-            margin-top: 40px;
-            display: none;
-        }
+    %% Control Plane
+    subgraph Control_Plane ["Centralized Control Plane (Enterprise Governed)"]
+        SR[Enterprise Schema Registry]
+        KMS[Key Management Service / Vault]
+        GitOps[GitOps Git/Terraform Repo]
+    end
+    class Control_Plane controlPlane
 
-        .pattern-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-left: 5px solid var(--success);
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
+    %% Tier 1 Data Plane
+    subgraph Tier_1 ["Tier 1: Mission Critical Hub (Active-Active)"]
+        K1_East[(Kafka East Region)]
+        K1_West[(Kafka West Region)]
+        K1_East <-->|Bidirectional Replication| K1_West
+    end
+    class Tier_1 tier1
 
-        .pattern-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
+    %% Tier 2 Data Plane
+    subgraph Tier_2 ["Tier 2: Analytical & Bulk Hub (Active-Passive)"]
+        K2_Main[(Kafka Main Region)]
+        DataLake[(Enterprise Data Lake)]
+        K2_Main -->|Sink Connector| DataLake
+    end
+    class Tier_2 tier2
 
-        .pattern-justification {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .comments-section {
-            margin-top: 50px;
-            background: #fafafa;
-            padding: 20px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-        }
-
-        .comment-box {
-            width: 100%;
-            height: 80px;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-family: inherit;
-        }
-
-        .comment-list {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 20px;
-        }
-
-        .comment-item {
-            background: #fff;
-            padding: 10px 15px;
-            border-left: 3px solid var(--accent);
-            margin-bottom: 10px;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            font-size: 14px;
-        }
-
-        .comment-author {
-            font-weight: bold;
-            color: var(--primary);
-            font-size: 12px;
-            margin-bottom: 4px;
-            display: block;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h1>🏛️ Enterprise Architecture: EDA Decision Engine</h1>
-    <p>Welcome to the ARB Paved Road. Answer the questions below regarding your application's data flow, and the engine will prescribe the mandated Enterprise Integration Patterns.</p>
-
-    <div id="questionnaire">
-        <div class="question-group">
-            <label>1. Are you updating a local database AND publishing a message to Kafka within the same transaction?</label>
-            <select id="q1">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-        </div>
-
-        <div class="question-group">
-            <label>2. Are you extracting events directly from a legacy core database table (e.g., Mainframe DB2, Oracle)?</label>
-            <select id="q2">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-        </div>
-
-        <div class="question-group">
-            <label>3. Does your message payload exceed 1MB (e.g., massive ISO20022/SWIFT XML blobs)?</label>
-            <select id="q3">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-        </div>
-
-        <div class="question-group">
-            <label>4. Does the payload contain sensitive PII or PCI data (SSN, Account Numbers)?</label>
-            <select id="q4">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-        </div>
-
-        <div class="question-group">
-            <label>5. Does your business process involve multiple steps across different microservices (e.g., Fraud Check -> Debit -> Wire Dispatch)?</label>
-            <select id="q5">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-        </div>
-
-        <button onclick="evaluateArchitecture()">Generate Architecture Blueprint</button>
-    </div>
-
-    <div id="results-area">
-        <h2>📑 Mandated Enterprise Patterns</h2>
-        <p>Based on your system constraints, the ARB mandates the following architectural patterns to ensure compliance, resilience, and scalability:</p>
-        <div id="pattern-container"></div>
-    </div>
-
-    <div class="comments-section">
-        <h3>💬 ARB Collaboration & Feedback</h3>
-        <p>Need an exception or want to propose an enhancement to the Paved Road? Leave a comment below.</p>
-        <textarea class="comment-box" id="new-comment" placeholder="Enter your architectural feedback or exception request..."></textarea>
-        <button style="background-color: var(--accent); color: #333;" onclick="addComment()">Submit Comment</button>
+    %% M&A Edge Spoke
+    subgraph Spoke_BankA ["Acquired Bank A (Edge Spoke)"]
+        LegacyA[Legacy Core DB]
+        CDC_A[Debezium CDC]
+        Edge_Kafka[(Edge Kafka Cluster)]
+        ACL_A[Anti-Corruption Layer App]
         
-        <ul class="comment-list" id="comment-list">
-            <li class="comment-item">
-                <span class="comment-author">Principal Architect (System) • Just now</span>
-                Remember, bypassing Crypto-shredding for PII will result in an automatic failure during the infosec CI/CD gate.
-            </li>
-        </ul>
-    </div>
-</div>
+        LegacyA --> CDC_A
+        CDC_A --> Edge_Kafka
+        Edge_Kafka --> ACL_A
+    end
+    class Spoke_BankA edge
 
-<script>
-    // Engine Logic
-    function evaluateArchitecture() {
-        const patterns = [];
+    %% Connections
+    SR -.->|Validates Schemas| Tier_1
+    SR -.->|Validates Schemas| Tier_2
+    KMS -.->|Provides DEKs| ACL_A
+    
+    ACL_A -->|Unidirectional Cluster Link<br/>Clean Avro Events| K1_East
+    Tier_1 -->|Telemetry / Raw Data| K2_Main
 
-        // Fetch inputs
-        const q1 = document.getElementById('q1').value;
-        const q2 = document.getElementById('q2').value;
-        const q3 = document.getElementById('q3').value;
-        const q4 = document.getElementById('q4').value;
-        const q5 = document.getElementById('q5').value;
+```
 
-        // Evaluate Rules
-        if (q1 === 'yes') {
-            patterns.push({
-                title: "📦 Transactional Outbox Pattern",
-                justification: "Mandated to prevent dual-write failures. You must write the event to an OUTBOX table in the same DB transaction as your business data, and use a relay (e.g., Debezium/Kafka Connect) to push it to Kafka."
-            });
-        }
-        
-        if (q2 === 'yes') {
-            patterns.push({
-                title: "🛡️ Change Data Capture (CDC) + Anti-Corruption Layer",
-                justification: "Raw database schemas must not be exposed to the enterprise. Use Debezium to stream the legacy row into a private topic, then deploy an ACL microservice to transform it into an Enterprise Domain Event (Avro) before publishing to a public topic."
-            });
-        }
+---
 
-        if (q3 === 'yes') {
-            patterns.push({
-                title: "🧳 Claim Check Pattern",
-                justification: "Kafka is an event log, not a file store. Large payloads must be saved to an S3/Blob Object Store. The Kafka event should only contain the URI pointer for the consumer to 'claim' the data."
-            });
-        }
+### **2. Topic Placement Decision Matrix**
 
-        if (q4 === 'yes') {
-            patterns.push({
-                title: "🔐 Envelope Encryption (Crypto-Shredding)",
-                justification: "To comply with GDPR/CCPA 'Right to be Forgotten', PII must not be written in plaintext to immutable logs. Use the Enterprise Kafka SDK to encrypt PII fields via KMS before publishing."
-            });
-        }
+Developers consistently struggle with *where* to put their data. Use this decision tree to enforce infrastructure tiering and prevent Tier 1 from being overwhelmed by low-value telemetry.
 
-        if (q5 === 'yes') {
-            patterns.push({
-                title: "🎼 Saga Pattern (Orchestration/Choreography)",
-                justification: "Distributed transactions require compensating workflows. If step 3 fails, you must have a mechanism to reverse step 1 and 2. Utilize a Saga Orchestrator (like Temporal) for complex flows."
-            });
-        }
+```mermaid
+flowchart TD
+    Start([Developer Requests New Topic]) --> Q1{Is this for an<br/>Acquired Bank/External Entity?}
+    
+    Q1 -->|Yes| Edge[Deploy to Edge/Spoke Cluster]
+    Edge --> ACL_Route[Route through Anti-Corruption Layer]
+    ACL_Route --> Hub_Eval
+    
+    Q1 -->|No| Hub_Eval{What is the Business Impact<br/>if this topic goes down?}
+    
+    Hub_Eval -->|Severe Financial/Regulatory Loss<br/>Fedwire, RTP, Ledger| T1{Requires Multi-Region<br/>Failover (RTO < 1 min)?}
+    
+    T1 -->|Yes| Tier1[Provision in Tier 1 Active-Active]
+    
+    Hub_Eval -->|Delayed Reporting, UI Glitches<br/>Clickstream, Batches, Analytics| T2{Is payload > 1MB?}
+    
+    T1 -->|No| Tier2
+    T2 -->|No| Tier2[Provision in Tier 2 Active-Passive]
+    
+    T2 -->|Yes| ClaimCheck[Mandate Claim Check Pattern<br/>Store in S3, Publish Pointer to Tier 2]
 
-        // Display logic
-        const container = document.getElementById('pattern-container');
-        container.innerHTML = ''; // Clear previous
+```
 
-        if (patterns.length === 0) {
-            container.innerHTML = `
-                <div class="pattern-card" style="border-left-color: var(--primary);">
-                    <div class="pattern-title">✅ Standard Publish/Subscribe</div>
-                    <div class="pattern-justification">Your constraints do not trigger any complex enterprise patterns. You are cleared to use standard Kafka Producer/Consumer configurations with Avro schemas.</div>
-                </div>
-            `;
-        } else {
-            patterns.forEach(p => {
-                const div = document.createElement('div');
-                div.className = 'pattern-card';
-                div.innerHTML = `
-                    <div class="pattern-title">${p.title}</div>
-                    <div class="pattern-justification">${p.justification}</div>
-                `;
-                container.appendChild(div);
-            });
-        }
+---
 
-        // Unhide results
-        document.getElementById('results-area').style.display = 'block';
-        
-        // Smooth scroll to results
-        document.getElementById('results-area').scrollIntoView({ behavior: 'smooth' });
-    }
+### **3. The ARB Playbook: Approved Patterns & Guardrails**
 
-    // Comments Logic
-    function addComment() {
-        const commentBox = document.getElementById('new-comment');
-        const text = commentBox.value.trim();
-        
-        if (text === '') return;
+For each pattern, here is the unvarnished truth about implementation in a banking context.
 
-        const list = document.getElementById('comment-list');
-        const li = document.createElement('li');
-        li.className = 'comment-item';
-        
-        // Add current time
-        const now = new Date();
-        const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+#### **A. Transactional Outbox Pattern**
 
-        li.innerHTML = `
-            <span class="comment-author">Application Developer • ${timeString}</span>
-            ${text}
-        `;
-        
-        // Insert at top
-        list.insertBefore(li, list.firstChild);
-        
-        // Clear box
-        commentBox.value = '';
-    }
-</script>
+* **Use Case:** Tying a database write (Account Debit) and a Kafka publish (Wire Initiated) into a single atomic transaction.
 
-</body>
-</html>
+| Category | Details |
+| --- | --- |
+| **Pros** | **Guaranteed Atomicity:** Zero risk of dual-write discrepancies. If the DB fails, the event is never sent. Perfect for financial ledgers. |
+| **Cons** | **Latency Overhead:** Adds milliseconds to the transaction. Relies on a polling mechanism or CDC (Debezium) to read the outbox, which introduces asynchronous delay. |
+| **Watch Out For** | **Outbox Table Bloat:** If the CDC relay crashes, the outbox table grows infinitely, eventually taking down the primary application database. |
+| **DO** | ✅ Create a strict TTL/Purge process to delete rows from the Outbox table once they are successfully committed to Kafka. |
+| **DON'T** | ❌ Never put a synchronous REST or Kafka network call *inside* your database transaction boundary. This causes thread exhaustion during network blips. |
+
+#### **B. Event Sourcing**
+
+* **Use Case:** Core banking ledgers where the absolute truth is derived from a chronological sequence of events, not a static database row.
+
+| Category | Details |
+| --- | --- |
+| **Pros** | **Cryptographic Auditability:** You can literally "time travel" to see the exact state of an account at 14:02:55 on a Tuesday. Unparalleled for regulatory compliance. |
+| **Cons** | **Steep Complexity:** Schema evolution is notoriously difficult. If an event structure changes, replaying historical events requires complex upcasting logic. |
+| **Watch Out For** | **The Infinite Replay Trap:** Replaying 10 years of transactions to get a current balance will cause system timeouts. |
+| **DO** | ✅ Implement periodic "Snapshots" (e.g., storing the aggregated balance at midnight every day). Replay events only from the latest snapshot. |
+| **DON'T** | ❌ Never store volatile external references (e.g., current FX rates) in the event. Store the *actual* rate used at the exact moment of the transaction. |
+
+#### **C. CQRS (Command Query Responsibility Segregation)**
+
+* **Use Case:** Digital Banking UI facing millions of customers reading balances, while the backend processes heavy batch writes.
+
+| Category | Details |
+| --- | --- |
+| **Pros** | **Ultimate Scalability:** Read endpoints can be scaled independently of write databases. Allows using optimized read-stores (e.g., MongoDB, Elasticsearch) instead of joining 15 relational tables. |
+| **Cons** | **Eventual Consistency:** The UI might read stale data for a few milliseconds (or seconds during a load spike) after a write. |
+| **Watch Out For** | **Customer Panic:** A customer deposits $100 (Command), refreshes the screen, and the $100 isn't there yet because the Read model hasn't updated. |
+| **DO** | ✅ Use "Optimistic UI Updates" on the front-end (simulate the success) and utilize unique `Correlation IDs` to track when the read-model has caught up. |
+| **DON'T** | ❌ Do not use CQRS for simple CRUD applications. The cognitive load and infrastructure overhead will crush a small engineering team. |
+
+#### **D. Claim Check Pattern**
+
+* **Use Case:** Check Image processing, massive ISO20022 XML files, or bulk regulatory reporting files.
+
+| Category | Details |
+| --- | --- |
+| **Pros** | **Protects Kafka:** Keeps Kafka brokers lean, fast, and stable. Kafka is terrible at handling payloads > 1MB due to memory allocation and garbage collection thrashing. |
+| **Cons** | **Two-Phase Reads:** Consumers must fetch the event from Kafka, parse the URI, and then make an HTTP call to S3/Blob to get the actual data. |
+| **Watch Out For** | **Race Conditions:** The producer publishes the Kafka event *before* the S3 upload finishes. The consumer reads the event, hits S3, gets a 404 Not Found, and crashes. |
+| **DO** | ✅ Mandate that producers ONLY publish the Kafka event after receiving a `200 OK` confirmation from the Object Store. |
+| **DON'T** | ❌ Never put PII or sensitive business routing data in the URI or S3 Metadata. Those fields are often logged in plaintext by network proxies. |
+
+#### **E. Anti-Corruption Layer (ACL)**
+
+* **Use Case:** M&A integration. Shielding the pristine Enterprise Architecture from a newly acquired bank's 1990s mainframe data model.
+
+| Category | Details |
+| --- | --- |
+| **Pros** | **Domain Isolation:** Prevents legacy terminology and poor data structures from infecting the new Enterprise Schema Registry. |
+| **Cons** | **Development Bottleneck:** The ACL requires active maintenance. Every time the legacy system changes, the ACL must be updated. |
+| **Watch Out For** | **The ACL Monolith:** Teams often build one giant ACL for an entire legacy system. It becomes a centralized bottleneck that slows down all integrations. |
+| **DO** | ✅ Deploy multiple, bounded ACLs. Keep the ACL physically and logically as close to the legacy system as possible. Publish clean Avro to the Enterprise Hub. |
+| **DON'T** | ❌ Do not let the ACL house core business logic. It is a translator (mapping, formatting, encrypting PII), not a decision engine. |
