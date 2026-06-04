@@ -1,1 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Architecture: EDA Decision Engine</title>
+    <style>
+        :root {
+            --primary: #003366;
+            --secondary: #00509e;
+            --accent: #ff9900;
+            --background: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border: #e0e0e0;
+            --success: #28a745;
+            --danger: #dc3545;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .question-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9fbfc;
+            border-left: 4px solid var(--secondary);
+            border-radius: 4px;
+        }
+
+        .question-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            display: inline-block;
+            background: var(--secondary);
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: var(--primary);
+        }
+
+        #results-area {
+            margin-top: 40px;
+            display: none;
+        }
+
+        .pattern-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--success);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .pattern-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .pattern-justification {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .comments-section {
+            margin-top: 50px;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .comment-box {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+
+        .comment-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .comment-item {
+            background: #fff;
+            padding: 10px 15px;
+            border-left: 3px solid var(--accent);
+            margin-bottom: 10px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            font-size: 14px;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 12px;
+            margin-bottom: 4px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🏛️ Enterprise Architecture: EDA Decision Engine</h1>
+    <p>Welcome to the ARB Paved Road. Answer the questions below regarding your application's data flow, and the engine will prescribe the mandated Enterprise Integration Patterns.</p>
+
+    <div id="questionnaire">
+        <div class="question-group">
+            <label>1. Are you updating a local database AND publishing a message to Kafka within the same transaction?</label>
+            <select id="q1">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+        </div>
+
+        <div class="question-group">
+            <label>2. Are you extracting events directly from a legacy core database table (e.g., Mainframe DB2, Oracle)?</label>
+            <select id="q2">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+        </div>
+
+        <div class="question-group">
+            <label>3. Does your message payload exceed 1MB (e.g., massive ISO20022/SWIFT XML blobs)?</label>
+            <select id="q3">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+        </div>
+
+        <div class="question-group">
+            <label>4. Does the payload contain sensitive PII or PCI data (SSN, Account Numbers)?</label>
+            <select id="q4">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+        </div>
+
+        <div class="question-group">
+            <label>5. Does your business process involve multiple steps across different microservices (e.g., Fraud Check -> Debit -> Wire Dispatch)?</label>
+            <select id="q5">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+        </div>
+
+        <button onclick="evaluateArchitecture()">Generate Architecture Blueprint</button>
+    </div>
+
+    <div id="results-area">
+        <h2>📑 Mandated Enterprise Patterns</h2>
+        <p>Based on your system constraints, the ARB mandates the following architectural patterns to ensure compliance, resilience, and scalability:</p>
+        <div id="pattern-container"></div>
+    </div>
+
+    <div class="comments-section">
+        <h3>💬 ARB Collaboration & Feedback</h3>
+        <p>Need an exception or want to propose an enhancement to the Paved Road? Leave a comment below.</p>
+        <textarea class="comment-box" id="new-comment" placeholder="Enter your architectural feedback or exception request..."></textarea>
+        <button style="background-color: var(--accent); color: #333;" onclick="addComment()">Submit Comment</button>
+        
+        <ul class="comment-list" id="comment-list">
+            <li class="comment-item">
+                <span class="comment-author">Principal Architect (System) • Just now</span>
+                Remember, bypassing Crypto-shredding for PII will result in an automatic failure during the infosec CI/CD gate.
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    // Engine Logic
+    function evaluateArchitecture() {
+        const patterns = [];
+
+        // Fetch inputs
+        const q1 = document.getElementById('q1').value;
+        const q2 = document.getElementById('q2').value;
+        const q3 = document.getElementById('q3').value;
+        const q4 = document.getElementById('q4').value;
+        const q5 = document.getElementById('q5').value;
+
+        // Evaluate Rules
+        if (q1 === 'yes') {
+            patterns.push({
+                title: "📦 Transactional Outbox Pattern",
+                justification: "Mandated to prevent dual-write failures. You must write the event to an OUTBOX table in the same DB transaction as your business data, and use a relay (e.g., Debezium/Kafka Connect) to push it to Kafka."
+            });
+        }
+        
+        if (q2 === 'yes') {
+            patterns.push({
+                title: "🛡️ Change Data Capture (CDC) + Anti-Corruption Layer",
+                justification: "Raw database schemas must not be exposed to the enterprise. Use Debezium to stream the legacy row into a private topic, then deploy an ACL microservice to transform it into an Enterprise Domain Event (Avro) before publishing to a public topic."
+            });
+        }
+
+        if (q3 === 'yes') {
+            patterns.push({
+                title: "🧳 Claim Check Pattern",
+                justification: "Kafka is an event log, not a file store. Large payloads must be saved to an S3/Blob Object Store. The Kafka event should only contain the URI pointer for the consumer to 'claim' the data."
+            });
+        }
+
+        if (q4 === 'yes') {
+            patterns.push({
+                title: "🔐 Envelope Encryption (Crypto-Shredding)",
+                justification: "To comply with GDPR/CCPA 'Right to be Forgotten', PII must not be written in plaintext to immutable logs. Use the Enterprise Kafka SDK to encrypt PII fields via KMS before publishing."
+            });
+        }
+
+        if (q5 === 'yes') {
+            patterns.push({
+                title: "🎼 Saga Pattern (Orchestration/Choreography)",
+                justification: "Distributed transactions require compensating workflows. If step 3 fails, you must have a mechanism to reverse step 1 and 2. Utilize a Saga Orchestrator (like Temporal) for complex flows."
+            });
+        }
+
+        // Display logic
+        const container = document.getElementById('pattern-container');
+        container.innerHTML = ''; // Clear previous
+
+        if (patterns.length === 0) {
+            container.innerHTML = `
+                <div class="pattern-card" style="border-left-color: var(--primary);">
+                    <div class="pattern-title">✅ Standard Publish/Subscribe</div>
+                    <div class="pattern-justification">Your constraints do not trigger any complex enterprise patterns. You are cleared to use standard Kafka Producer/Consumer configurations with Avro schemas.</div>
+                </div>
+            `;
+        } else {
+            patterns.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'pattern-card';
+                div.innerHTML = `
+                    <div class="pattern-title">${p.title}</div>
+                    <div class="pattern-justification">${p.justification}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Unhide results
+        document.getElementById('results-area').style.display = 'block';
+        
+        // Smooth scroll to results
+        document.getElementById('results-area').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Comments Logic
+    function addComment() {
+        const commentBox = document.getElementById('new-comment');
+        const text = commentBox.value.trim();
+        
+        if (text === '') return;
+
+        const list = document.getElementById('comment-list');
+        const li = document.createElement('li');
+        li.className = 'comment-item';
+        
+        // Add current time
+        const now = new Date();
+        const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+        li.innerHTML = `
+            <span class="comment-author">Application Developer • ${timeString}</span>
+            ${text}
+        `;
+        
+        // Insert at top
+        list.insertBefore(li, list.firstChild);
+        
+        // Clear box
+        commentBox.value = '';
+    }
+</script>
+
+</body>
+</html>
