@@ -1,0 +1,974 @@
+<mxfile host="app.diagrams.net" pages="3">
+  <diagram name="Page-1" id="0LdEbzz7mzEYPyffaTbK">
+    <mxGraphModel dx="1006" dy="618" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="6cogvolZe4rnzu--3zP3-1" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;Enterprise Integration Patterns&lt;/b&gt;&#xa;Approved ARB Catalog&#xa;&lt;i&gt;Unified Metamodel&lt;/i&gt;" vertex="1">
+          <mxGeometry height="126" width="260" x="1260" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-2" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;Synchronous (Blocking)&lt;/b&gt;&#xa;Consumer waits for immediate response.&#xa;&lt;i&gt;Temporal Coupling: High&lt;/i&gt;" vertex="1">
+          <mxGeometry height="126" width="260" x="485" y="208" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-3" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;Asynchronous (Non-Blocking)&lt;/b&gt;&#xa;Thread releases; processed later.&#xa;&lt;i&gt;Temporal Coupling: Low&lt;/i&gt;" vertex="1">
+          <mxGeometry height="150" width="260" x="2190" y="196" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-4" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;RESTful (Request/Response)&lt;/b&gt;&#xa;Real-time queries &amp;amp; auth decisions.&#xa;&lt;i&gt;Risk: Tight coupling; consumer blocked.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="174" width="260" x="20" y="396" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-5" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;GraphQL (Federated API)&lt;/b&gt;&#xa;Mobile/Web composite data (BFF).&#xa;&lt;i&gt;Risk: N+1 query overload on core.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="150" width="260" x="330" y="408" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-6" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;gRPC / Protobuf&lt;/b&gt;&#xa;High-throughput internal K8s calls.&#xa;&lt;i&gt;Risk: Not human-readable; needs HTTP/2.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="150" width="260" x="640" y="408" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-7" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;API Façade / Wrapper&lt;/b&gt;&#xa;Modern interface over legacy core.&#xa;&lt;i&gt;Risk: Bound by legacy performance ceiling.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="150" width="260" x="950" y="408" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-8" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;Targeted (Commands)&lt;/b&gt;&#xa;1-to-1 async execution.&#xa;&lt;i&gt;Intent: Do this specific task.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="126" width="260" x="1260" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-9" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;Broadcast (Event/Push)&lt;/b&gt;&#xa;1-to-Many state distribution.&#xa;&lt;i&gt;Intent: This fact just happened.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="150" width="260" x="2190" y="408" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-10" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;Deferred (Pull/Batch)&lt;/b&gt;&#xa;Consumer controls retrieval timing.&#xa;&lt;i&gt;Intent: I will get it when ready.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="150" width="260" x="3120" y="408" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-11" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;Message Queue (P2P)&lt;/b&gt;&#xa;Guaranteed delivery &amp;amp; load leveling.&#xa;&lt;i&gt;Risk: Queue depth limits; DLQ needed.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="150" width="260" x="1105" y="632" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-12" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;Saga / Choreography&lt;/b&gt;&#xa;Long-running distributed transactions.&#xa;&lt;i&gt;Risk: High complexity; requires rollbacks.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="150" width="260" x="1415" y="632" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-13" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;Event Streaming (Kafka)&lt;/b&gt;&#xa;Audit trails &amp;amp; real-time analytics.&#xa;&lt;i&gt;Risk: Message ordering guarantees.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="150" width="260" x="1725" y="632" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-14" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;Change Data Capture (CDC)&lt;/b&gt;&#xa;Push legacy DB changes as events.&#xa;&lt;i&gt;Risk: Schema evolution &amp;amp; log retention.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="174" width="260" x="2035" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-15" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;Webhook / HTTP Callback&lt;/b&gt;&#xa;Push events to external partners.&#xa;&lt;i&gt;Risk: Retry logic &amp;amp; HMAC validation needed.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="150" width="260" x="2345" y="632" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-16" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;Server-Sent Events (SSE)&lt;/b&gt;&#xa;Unidirectional stream to browser.&#xa;&lt;i&gt;Risk: One-way only; scales poorly without HTTP/2.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="150" width="260" x="2655" y="632" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-17" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;Polling / Scheduled Batch&lt;/b&gt;&#xa;Legacy system integration.&#xa;&lt;i&gt;Risk: Load spikes; data is immediately stale.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="126" width="260" x="2965" y="644" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-18" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="&lt;b&gt;File-Based Pull (SFTP/S3)&lt;/b&gt;&#xa;Massive regulatory/clearing datasets.&#xa;&lt;i&gt;Risk: Error handling is at file granularity.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="174" width="260" x="3275" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-19" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-1" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.62;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-2" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="615" y="171" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-20" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-1" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.6;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-3" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2320" y="171" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-21" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-2" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.72;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-4" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="150" y="371" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-22" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-2" style="curved=1;startArrow=none;endArrow=block;exitX=0.12;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-5" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="371" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-23" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-2" style="curved=1;startArrow=none;endArrow=block;exitX=0.88;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-6" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="770" y="371" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-24" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-2" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.72;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-7" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1080" y="371" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-25" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-3" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.59;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-8" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1390" y="371" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-26" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-3" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-9" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-27" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-3" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.59;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-10" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="3250" y="371" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-28" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-8" style="curved=1;startArrow=none;endArrow=block;exitX=0.16;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-11" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1235" y="595" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-29" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-8" style="curved=1;startArrow=none;endArrow=block;exitX=0.84;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-12" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1545" y="595" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-30" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-9" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.71;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-13" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1855" y="595" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-31" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-9" style="curved=1;startArrow=none;endArrow=block;exitX=0.1;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-14" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2165" y="595" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-32" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-9" style="curved=1;startArrow=none;endArrow=block;exitX=0.9;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-15" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2475" y="595" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-33" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-9" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.71;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-16" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2785" y="595" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-34" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-10" style="curved=1;startArrow=none;endArrow=block;exitX=0.1;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-17" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="3095" y="595" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cogvolZe4rnzu--3zP3-35" edge="1" parent="1" source="6cogvolZe4rnzu--3zP3-10" style="curved=1;startArrow=none;endArrow=block;exitX=0.9;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="6cogvolZe4rnzu--3zP3-18" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="3405" y="595" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="P-VcTwXLFAq6ykzPJBX_" name="Page-2">
+    <mxGraphModel dx="1006" dy="618" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-1" name="Integration Metamodel" desc="Enterprise Governance" fill="#1f4e78" fontColor="#ffffff" parent="" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#1f4e78;strokeColor=#1f4e78;fontColor=#ffffff;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="20" y="858.96" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-2" name="L1: Boundary Context" desc="WHERE does it live?" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="270" y="289.74" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-3" name="North-South" desc="External / Edge" fill="#ffffff" fontColor="#000000" parent="L1" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="20" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-4" name="East-West" desc="Cross-Core" fill="#ffffff" fontColor="#000000" parent="L1" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="100" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-5" name="Intra-Domain" desc="Microservice Local" fill="#ffffff" fontColor="#000000" parent="L1" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="180" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-6" name="L2: Architecture Layer" desc="WHY are we doing this?" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="270" y="474.9599999999999" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-7" name="Experience" desc="UI / Channel" fill="#ffffff" fontColor="#000000" parent="L2" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="260" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-8" name="Process" desc="Orchestration" fill="#ffffff" fontColor="#000000" parent="L2" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="340" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-9" name="System" desc="Core Abstraction" fill="#ffffff" fontColor="#000000" parent="L2" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="420" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-10" name="Data Fabric" desc="State Sync" fill="#ffffff" fontColor="#000000" parent="L2" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="500" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-11" name="L3: Interaction Style" desc="WHEN does it move?" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="270" y="730.9599999999999" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-12" name="Synchronous" desc="Blocking (Immediate)" fill="#ffffff" fontColor="#000000" parent="L3" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="580" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-13" name="Async Targeted" desc="Command (Point-to-Point)" fill="#ffffff" fontColor="#000000" parent="L3" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="660" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-14" name="Event-Driven" desc="Broadcast (Facts)" fill="#ffffff" fontColor="#000000" parent="L3" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="740" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-15" name="Deferred" desc="Pull / Batch" fill="#ffffff" fontColor="#000000" parent="L3" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="820" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-16" name="L4: Logical Pattern" desc="HOW is it structured?" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="270" y="986.96" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-17" name="API Façade / BFF" desc="Aggregator Gateway" fill="#ffffff" fontColor="#000000" parent="L4" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="900" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-18" name="Saga Pattern" desc="Async Req-Reply" fill="#ffffff" fontColor="#000000" parent="L4" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="980" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-19" name="Pub-Sub / CQRS" desc="State Distribution" fill="#ffffff" fontColor="#000000" parent="L4" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="1060" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-20" name="Anti-Corruption" desc="Legacy Isolation" fill="#ffffff" fontColor="#000000" parent="L4" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="1140" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-21" name="L5: Standard Protocol" desc="WHAT is the standard?" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="270" y="1242.96" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-22" name="REST / GraphQL" desc="HTTP/1.1 Standard" fill="#ffffff" fontColor="#000000" parent="L5" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="1220" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-23" name="gRPC / Protobuf" desc="HTTP/2 Binary" fill="#ffffff" fontColor="#000000" parent="L5" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="1300" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-24" name="Kafka / AMQP" desc="Messaging Streams" fill="#ffffff" fontColor="#000000" parent="L5" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="1380" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-25" name="SFTP / Webhooks" desc="File / Push Triggers" fill="#ffffff" fontColor="#000000" parent="L5" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="1460" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-26" name="L6: Approved Platform" desc="WHICH tool is used?" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="270" y="1498.96" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-27" name="Broadcom Layer7" desc="Strategic: Edge Gateway" fill="#e2efda" fontColor="#006100" parent="L6" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#e2efda;strokeColor=#1f4e78;fontColor=#006100;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="1540" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-28" name="K8s (Spring/Go)" desc="Strategic: Orchestration" fill="#e2efda" fontColor="#006100" parent="L6" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#e2efda;strokeColor=#1f4e78;fontColor=#006100;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="1620" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-29" name="Kafka / IBM MQ" desc="Strategic: Messaging" fill="#e2efda" fontColor="#006100" parent="L6" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#e2efda;strokeColor=#1f4e78;fontColor=#006100;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="1700" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;" id="akMCapNzn-7iQckSlwa_-30" name="TIBCO / MuleSoft" desc="Legacy Containment" fill="#ffc7ce" fontColor="#9c0006" parent="L6" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffc7ce;strokeColor=#1f4e78;fontColor=#9c0006;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="65" width="180" x="520" y="1780" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="akMCapNzn-7iQckSlwa_-31" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-2" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="212" y="868.5433333333334" />
+              <mxPoint x="258" y="322.24" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-32" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-3" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="462" y="303.9066666666667" />
+              <mxPoint x="508" y="52.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-33" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-4" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="464" y="322.24" />
+              <mxPoint x="508" y="132.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-34" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-5" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="462" y="340.5733333333333" />
+              <mxPoint x="508" y="212.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-35" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-6" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="214" y="877.71" />
+              <mxPoint x="258" y="507.4599999999999" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-36" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-7" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="462" y="486.8349999999999" />
+              <mxPoint x="508" y="292.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-37" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-8" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="464" y="500.5849999999999" />
+              <mxPoint x="508" y="372.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-38" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-9" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="464" y="514.3349999999999" />
+              <mxPoint x="508" y="452.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-39" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-10" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="462" y="528.0849999999999" />
+              <mxPoint x="508" y="532.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-40" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-11" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="216" y="886.8766666666667" />
+              <mxPoint x="258" y="763.4599999999999" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-41" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-12" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="462" y="742.8349999999999" />
+              <mxPoint x="508" y="612.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-42" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-13" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="464" y="756.5849999999999" />
+              <mxPoint x="508" y="692.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-43" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-14" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="464" y="770.3349999999999" />
+              <mxPoint x="508" y="772.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-44" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-15" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="462" y="784.0849999999999" />
+              <mxPoint x="508" y="852.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-45" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-16" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="216" y="896.0433333333333" />
+              <mxPoint x="258" y="1019.46" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-46" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-17" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="462" y="998.835" />
+              <mxPoint x="508" y="932.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-47" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-18" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="464" y="1012.585" />
+              <mxPoint x="508" y="1012.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-48" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-19" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="464" y="1026.335" />
+              <mxPoint x="508" y="1092.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-49" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-20" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="462" y="1040.085" />
+              <mxPoint x="508" y="1172.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-50" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-21" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="214" y="905.2099999999999" />
+              <mxPoint x="258" y="1275.46" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-51" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-22" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="462" y="1254.835" />
+              <mxPoint x="508" y="1252.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-52" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-23" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="464" y="1268.585" />
+              <mxPoint x="508" y="1332.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-53" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-24" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="464" y="1282.335" />
+              <mxPoint x="508" y="1412.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-54" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-25" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="462" y="1296.085" />
+              <mxPoint x="508" y="1492.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-55" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-26" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="212" y="914.3766666666666" />
+              <mxPoint x="258" y="1531.46" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-56" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-26" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-27" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="462" y="1510.835" />
+              <mxPoint x="508" y="1572.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-57" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-26" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-28" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="464" y="1524.585" />
+              <mxPoint x="508" y="1652.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-58" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-26" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-29" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="464" y="1538.335" />
+              <mxPoint x="508" y="1732.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="akMCapNzn-7iQckSlwa_-59" edge="1" parent="1" source="akMCapNzn-7iQckSlwa_-26" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;" target="akMCapNzn-7iQckSlwa_-30" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="462" y="1552.085" />
+              <mxPoint x="508" y="1812.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="VwimDML5pDr8X__AJyc8" name="Page-3">
+    <mxGraphModel dx="1184" dy="813" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="tKup20RGIfWm1I5Jdikd-1" edge="1" parent="1" source="lhiUGuGmYxj844ZOmYup-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="lhiUGuGmYxj844ZOmYup-36" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-1" name="Enterprise Integration Patterns" desc=" ARB Catalog" tradeoff="Unified Metamodel" fill="#1f4e78" fontColor="#ffffff" parent="" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#1f4e78;strokeColor=#1f4e78;fontColor=#ffffff;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="200" x="20" y="462.05" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-3" edge="1" parent="1" source="lhiUGuGmYxj844ZOmYup-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="tKup20RGIfWm1I5Jdikd-2" value="" visible="0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-2" name="Synchronous (Blocking)" desc="Consumer waits for immediate response." tradeoff="Temporal Coupling: High" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1">
+          <mxCell collapsed="1" parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="430" y="150.00000000000003" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-3" name="RESTful (Request/Response)" desc="Real-time queries &amp; auth decisions." tradeoff="Risk: Tight coupling; consumer blocked." fill="#ffffff" fontColor="#000000" parent="SYNC" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1" visible="0">
+            <mxGeometry height="95" width="220" x="1990" y="130" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-4" name="GraphQL (Federated API)" desc="Mobile/Web composite data (BFF)." tradeoff="Risk: N+1 query overload on core." fill="#ffffff" fontColor="#000000" parent="SYNC" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1" visible="0">
+            <mxGeometry height="95" width="220" x="2030" y="330" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-5" name="gRPC / Protobuf" desc="High-throughput internal K8s calls." tradeoff="Risk: Not human-readable; needs HTTP/2." fill="#ffffff" fontColor="#000000" parent="SYNC" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1" visible="0">
+            <mxGeometry height="95" width="220" x="1960" y="-80" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-6" name="API Façade / Wrapper" desc="Modern interface over legacy core." tradeoff="Risk: Bound by legacy performance ceiling." fill="#ffffff" fontColor="#000000" parent="SYNC" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1" visible="0">
+            <mxGeometry height="95" width="220" x="1270" y="-140" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-39" edge="1" parent="1" source="lhiUGuGmYxj844ZOmYup-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="tKup20RGIfWm1I5Jdikd-36">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-41" edge="1" parent="1" source="lhiUGuGmYxj844ZOmYup-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="tKup20RGIfWm1I5Jdikd-37">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-7" name="Asynchronous (Non-Blocking)" desc="Thread releases; processed later." tradeoff="Temporal Coupling: Low" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="410" y="940.0025" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-46" edge="1" parent="1" source="lhiUGuGmYxj844ZOmYup-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="tKup20RGIfWm1I5Jdikd-45">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-8" name="Targeted (Commands)" desc="1-to-1 async execution." tradeoff="Intent: Do this specific task." fill="#e2efda" fontColor="#006100" parent="ASYNC" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#e2efda;strokeColor=#1f4e78;fontColor=#006100;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="1100" y="750" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-9" name="Message Queue (P2P)" desc="Guaranteed delivery &amp; load leveling." tradeoff="Risk: Queue depth limits; DLQ needed." fill="#ffffff" fontColor="#000000" parent="ASYNC_CMD" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="1590" y="557.05" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-10" name="Saga / Choreography" desc="Long-running distributed transactions." tradeoff="Risk: High complexity; requires rollbacks." fill="#ffffff" fontColor="#000000" parent="ASYNC_CMD" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="1710" y="710" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-58" edge="1" parent="1" source="lhiUGuGmYxj844ZOmYup-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="tKup20RGIfWm1I5Jdikd-51">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-11" name="Broadcast (Event/Push)" desc="1-to-Many state distribution." tradeoff="Intent: This fact just happened." fill="#e2efda" fontColor="#006100" parent="ASYNC" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#e2efda;strokeColor=#1f4e78;fontColor=#006100;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="1100" y="930" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-12" name="Event Streaming (Kafka)" desc="Audit trails &amp; real-time analytics." tradeoff="Risk: Message ordering guarantees." fill="#ffffff" fontColor="#000000" parent="ASYNC_EVT" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="2270" y="930" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-13" name="Change Data Capture (CDC)" desc="Push legacy DB changes as events." tradeoff="Risk: Schema evolution &amp; log retention." fill="#ffffff" fontColor="#000000" parent="ASYNC_EVT" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="2280" y="1130" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-14" name="Webhook / HTTP Callback" desc="Push events to external partners." tradeoff="Risk: Retry logic &amp; HMAC validation needed." fill="#ffffff" fontColor="#000000" parent="ASYNC_EVT" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="2300" y="580" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-15" name="Server-Sent Events (SSE)" desc="Unidirectional stream to browser." tradeoff="Risk: One-way only; scales poorly without HTTP/2." fill="#ffffff" fontColor="#000000" parent="ASYNC_EVT" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="2290" y="735" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-73" edge="1" parent="1" source="lhiUGuGmYxj844ZOmYup-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="tKup20RGIfWm1I5Jdikd-68">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-16" name="Deferred (Pull/Batch)" desc="Consumer controls retrieval timing." tradeoff="Intent: I will get it when ready." fill="#e2efda" fontColor="#006100" parent="ASYNC" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#e2efda;strokeColor=#1f4e78;fontColor=#006100;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="1100" y="1110" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-17" name="Polling / Scheduled Batch" desc="Legacy system integration." tradeoff="Risk: Load spikes; data is immediately stale." fill="#ffffff" fontColor="#000000" parent="ASYNC_DEF" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="1940" y="1240" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b style=&quot;font-size:14px&quot;&gt;%name%&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid #ccc;&quot;&gt;&lt;i style=&quot;font-size:11px&quot;&gt;%desc%&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px; color:#555;&quot;&gt;&lt;i&gt;%tradeoff%&lt;/i&gt;&lt;/span&gt;" id="lhiUGuGmYxj844ZOmYup-18" name="File-Based Pull (SFTP/S3)" desc="Massive regulatory/clearing datasets." tradeoff="Risk: Error handling is at file granularity." fill="#ffffff" fontColor="#000000" parent="ASYNC_DEF" placeholders="1">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="1940" y="1440" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="lhiUGuGmYxj844ZOmYup-19" edge="1" parent="1" source="lhiUGuGmYxj844ZOmYup-36" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#1f4e78;exitX=0.48;exitY=-0.014;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-2" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="366" y="200" />
+              <mxPoint x="430" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lhiUGuGmYxj844ZOmYup-37" connectable="0" parent="lhiUGuGmYxj844ZOmYup-19" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#f5f5f5;fontColor=#333333;labelBorderColor=#666666;" value="YES&lt;div&gt;&lt;font style=&quot;font-size: 9px;&quot;&gt;Example: ATM Cash withdrawal authorization.&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 9px;&quot;&gt;The ledger must validate the balance before the machine dispenses cash&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.5649" y="1" as="geometry">
+            <mxPoint x="5" y="-71" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="&lt;font&gt;&lt;b&gt;&lt;font&gt;Temporal Coupling Question&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;/font&gt;&lt;hr style=&quot;border: 1px solid rgb(204, 204, 204);&quot;&gt;&lt;i&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;Q1 : Is Calling system unable to proceed with its core business function without immediate data payload from Provider?&lt;/span&gt;&lt;/i&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" name="Enterprise Integration Patterns" desc=" ARB Catalog" tradeoff="Unified Metamodel" fill="#1f4e78" fontColor="#ffffff" parent="" placeholders="1" id="lhiUGuGmYxj844ZOmYup-36">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#1f4e78;strokeColor=#1f4e78;fontColor=#ffffff;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="220" x="260" y="462.05" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="lhiUGuGmYxj844ZOmYup-41" edge="1" parent="1" source="lhiUGuGmYxj844ZOmYup-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=-0.003;entryY=0.671;entryDx=0;entryDy=0;entryPerimeter=0;" target="lhiUGuGmYxj844ZOmYup-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lhiUGuGmYxj844ZOmYup-42" connectable="0" parent="lhiUGuGmYxj844ZOmYup-41" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#f5f5f5;fontColor=#333333;labelBorderColor=#666666;" value="NO&lt;br&gt;&lt;div&gt;&lt;div style=&quot;caret-color: rgb(51, 51, 51); color: rgb(51, 51, 51); background-color: rgb(245, 245, 245);&quot;&gt;&lt;font style=&quot;font-size: 9px;&quot;&gt;Example: Triggering a loan approval notification&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.5235" as="geometry">
+            <mxPoint y="17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-7" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="tKup20RGIfWm1I5Jdikd-4" visible="0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;span style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Four Primary Vectors&lt;/b&gt;&lt;/span&gt;&lt;br&gt;&lt;hr style=&quot;border: 1px solid rgb(204, 204, 204);&quot;&gt;&lt;span style=&quot;color: rgb(85, 85, 85);&quot;&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;i&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;1. Consumer Typology (Who is consuming?)&lt;/b&gt;&lt;/span&gt;&lt;/i&gt;&lt;/div&gt;&lt;/span&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;&lt;i&gt;2. Payload &amp;amp; Performance Efficiency&amp;nbsp;&lt;/i&gt;&lt;/span&gt;&lt;i style=&quot;font-size: 11px;&quot;&gt;(How fast/dense?)&lt;/i&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;&lt;i&gt;3. Data Graph Complexity (Single domain or cross domain aggregation?)&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;&lt;i&gt;4. System maturity (Modern cloud-native vs Greenfield vs Legacy Monolith)&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" name="Synchronous (Blocking)" desc="Consumer waits for immediate response." tradeoff="Temporal Coupling: High" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-2">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1" visible="0">
+            <mxGeometry height="160" width="300" x="710" y="117.5" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-9" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="tKup20RGIfWm1I5Jdikd-8" visible="0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-10" connectable="0" parent="tKup20RGIfWm1I5Jdikd-9" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="NO" vertex="1">
+          <mxGeometry relative="1" x="0.3339" y="-2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Is It a Legacy System?&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" name="Synchronous (Blocking)" desc="Consumer waits for immediate response." tradeoff="Temporal Coupling: High" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-4">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1" visible="0">
+            <mxGeometry height="50" width="200" x="1080" y="85" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-5" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.002;entryY=0.607;entryDx=0;entryDy=0;entryPerimeter=0;" target="lhiUGuGmYxj844ZOmYup-6" visible="0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-6" connectable="0" parent="tKup20RGIfWm1I5Jdikd-5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="YES" vertex="1">
+          <mxGeometry relative="1" x="-0.3322" y="3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-27" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="tKup20RGIfWm1I5Jdikd-13" visible="0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-28" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="tKup20RGIfWm1I5Jdikd-12" visible="0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-29" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="tKup20RGIfWm1I5Jdikd-11" visible="0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;What is the Client/Consumer Type?&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" name="Synchronous (Blocking)" desc="Consumer waits for immediate response." tradeoff="Temporal Coupling: High" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-8">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1" visible="0">
+            <mxGeometry height="50" width="200" x="1160" y="200" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-31" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="tKup20RGIfWm1I5Jdikd-20" visible="0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Web/Mobile (BFF)&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" name="Synchronous (Blocking)" desc="Consumer waits for immediate response." tradeoff="Temporal Coupling: High" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-11">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1" visible="0">
+            <mxGeometry height="50" width="200" x="1430" y="310" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-19" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-3" visible="0">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1850" y="225" />
+              <mxPoint x="1850" y="230" />
+              <mxPoint x="1960" y="230" />
+              <mxPoint x="1960" y="201" />
+            </Array>
+            <mxPoint x="2050" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;B2B/Open Banking&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" name="Synchronous (Blocking)" desc="Consumer waits for immediate response." tradeoff="Temporal Coupling: High" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-12">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1" visible="0">
+            <mxGeometry height="50" width="200" x="1430" y="200" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-30" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="tKup20RGIfWm1I5Jdikd-14" visible="0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Internal Service to Service&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" name="Synchronous (Blocking)" desc="Consumer waits for immediate response." tradeoff="Temporal Coupling: High" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-13">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1" visible="0">
+            <mxGeometry height="50" width="200" x="1430" y="85" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-15" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-5" visible="0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-16" connectable="0" parent="tKup20RGIfWm1I5Jdikd-15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="YES" vertex="1">
+          <mxGeometry relative="1" x="0.5728" y="-4" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-17" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-3" visible="0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-18" connectable="0" parent="tKup20RGIfWm1I5Jdikd-17" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="NO" vertex="1">
+          <mxGeometry relative="1" x="0.347" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Performance Over Text?&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" name="Synchronous (Blocking)" desc="Consumer waits for immediate response." tradeoff="Temporal Coupling: High" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-14">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1" visible="0">
+            <mxGeometry height="50" width="200" x="1700" y="80" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-23" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-5" visible="0">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1820" y="310" />
+              <mxPoint x="1820" y="150" />
+              <mxPoint x="1960" y="150" />
+              <mxPoint x="1960" y="50" />
+              <mxPoint x="2015" y="50" />
+            </Array>
+            <mxPoint x="1990" y="20" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-24" connectable="0" parent="tKup20RGIfWm1I5Jdikd-23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="No" vertex="1">
+          <mxGeometry relative="1" x="-0.5601" y="2" as="geometry">
+            <mxPoint y="26" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-25" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-4" visible="0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-26" connectable="0" parent="tKup20RGIfWm1I5Jdikd-25" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="YES" vertex="1">
+          <mxGeometry relative="1" x="0.4656" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Cross Domain Aggregation?&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" name="Synchronous (Blocking)" desc="Consumer waits for immediate response." tradeoff="Temporal Coupling: High" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-20">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=middle;collapsible=1;treeFolding=1;" vertex="1" visible="0">
+            <mxGeometry height="50" width="200" x="1710" y="310" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-42" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;span style=&quot;text-align: start; font-size: medium;&quot;&gt;Is the interaction an explicit instruction directed at a specific downstream system to execute a state change?&lt;/span&gt;" name="Asynchronous (Non-Blocking)" desc="Thread releases; processed later." tradeoff="Temporal Coupling: Low" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-36">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="270" x="720" y="750" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-44" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;span style=&quot;text-align: start; font-size: medium;&quot;&gt;Is the interaction a long-running, non-urgent, or high-volume batch job that cannot or should not be processed in near-real-time?&lt;/span&gt;" name="Asynchronous (Non-Blocking)" desc="Thread releases; processed later." tradeoff="Temporal Coupling: Low" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-37">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="270" x="720" y="1110" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-43" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;span style=&quot;text-align: start; font-size: medium;&quot;&gt;Is the interaction a notification that an event has already occurred, published without caring who consumes it or how many systems react to it?&lt;/span&gt;" name="Asynchronous (Non-Blocking)" desc="Thread releases; processed later." tradeoff="Temporal Coupling: Low" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-38">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="300" x="720" y="930" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-40" edge="1" parent="1" source="lhiUGuGmYxj844ZOmYup-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.002;entryY=0.598;entryDx=0;entryDy=0;entryPerimeter=0;" target="tKup20RGIfWm1I5Jdikd-38">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-47" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-48" connectable="0" parent="tKup20RGIfWm1I5Jdikd-47" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="NO&lt;div&gt;(Single System Destination)&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.0916" y="-3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-67" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;i data-path-to-node=&quot;17,0,0&quot; data-index-in-node=&quot;14&quot; style=&quot;text-align: start;&quot;&gt;Does this command involve updating state across multiple independent microservices or legacy systems that must either all succeed or all fail together (Distributed Transaction Lifecycle)?&lt;/i&gt;" name="Asynchronous (Non-Blocking)" desc="Thread releases; processed later." tradeoff="Temporal Coupling: Low" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-45">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="270" x="1390" y="750" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-54" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="tKup20RGIfWm1I5Jdikd-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-55" connectable="0" parent="tKup20RGIfWm1I5Jdikd-54" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="YES" vertex="1">
+          <mxGeometry relative="1" x="0.5902" as="geometry">
+            <mxPoint x="-21" y="47" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="&lt;i data-path-to-node=&quot;17,0,0&quot; data-index-in-node=&quot;14&quot; style=&quot;text-align: start;&quot;&gt;I&lt;/i&gt;&lt;span style=&quot;text-align: start; font-size: medium;&quot;&gt;s the consumer of this event an external, third-party entity outside the bank&#39;s secure network (e.g., a Fintech partner app, a corporate client ERP)?&lt;/span&gt;" name="Asynchronous (Non-Blocking)" desc="Thread releases; processed later." tradeoff="Temporal Coupling: Low" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-51">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="270" x="1390" y="930" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-59" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-14">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2020" y="830" />
+              <mxPoint x="2020" y="628" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-60" connectable="0" parent="tKup20RGIfWm1I5Jdikd-59" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="PUSH to PARTNER" vertex="1">
+          <mxGeometry relative="1" x="-0.6323" y="-4" as="geometry">
+            <mxPoint y="-90" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-61" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="lhiUGuGmYxj844ZOmYup-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-62" connectable="0" parent="tKup20RGIfWm1I5Jdikd-61" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Stream to client UI" vertex="1">
+          <mxGeometry relative="1" x="-0.0022" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="&lt;i data-path-to-node=&quot;21,1,0&quot; data-index-in-node=&quot;35&quot; style=&quot;text-align: start;&quot;&gt;Does the external partner require data pushed to their own HTTP servers natively, or does an open browser/client application need a continuous stream of real-time updates over a single connection?&lt;/i&gt;" name="Asynchronous (Non-Blocking)" desc="Thread releases; processed later." tradeoff="Temporal Coupling: Low" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-52">
+          <mxCell collapsed="1" parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="270" x="1800" y="830" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-63" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="lhiUGuGmYxj844ZOmYup-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-65" connectable="0" parent="tKup20RGIfWm1I5Jdikd-63" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Application Event Log" vertex="1">
+          <mxGeometry relative="1" x="-0.1031" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-64" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-66" connectable="0" parent="tKup20RGIfWm1I5Jdikd-64" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Database Log Extraction" vertex="1">
+          <mxGeometry relative="1" x="0.1457" y="-4" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="&lt;p data-path-to-node=&quot;21,2,0&quot; style=&quot;text-align: start;&quot;&gt;&lt;i data-path-to-node=&quot;21,2,0&quot; data-index-in-node=&quot;35&quot;&gt;Is the source of truth for this event an application layer publishing business-domain events, or must we extract data changes directly from a database transaction log without changing application code?&lt;/i&gt;&lt;/p&gt;&lt;div&gt;&lt;i data-path-to-node=&quot;21,2,0&quot; data-index-in-node=&quot;35&quot;&gt;&lt;br&gt;&lt;/i&gt;&lt;/div&gt;&lt;ul data-path-to-node=&quot;21,2,1&quot; style=&quot;text-align: start;&quot;&gt;&lt;/ul&gt;" name="Asynchronous (Non-Blocking)" desc="Thread releases; processed later." tradeoff="Temporal Coupling: Low" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-53">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="270" x="1800" y="1005" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-56" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.008;entryY=0.589;entryDx=0;entryDy=0;entryPerimeter=0;" target="tKup20RGIfWm1I5Jdikd-53">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-57" connectable="0" parent="tKup20RGIfWm1I5Jdikd-56" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="NO" vertex="1">
+          <mxGeometry relative="1" x="0.216" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-69" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="lhiUGuGmYxj844ZOmYup-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-70" connectable="0" parent="tKup20RGIfWm1I5Jdikd-69" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Low-Medium&lt;div&gt;System-Constrained Pull&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="0.0235" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="&lt;p data-path-to-node=&quot;25,0,0&quot; style=&quot;text-align: start;&quot;&gt;&lt;i data-path-to-node=&quot;25,0,0&quot; data-index-in-node=&quot;14&quot;&gt;Is the volume of data measured in millions of records, or is the source system incapable of pushing data out reactively, requiring a scheduled pull mechanism?&lt;/i&gt;&lt;/p&gt;&lt;ul data-path-to-node=&quot;25,0,1&quot; style=&quot;text-align: start;&quot;&gt;&lt;li&gt;&lt;p data-path-to-node=&quot;25,0,1,0,0&quot;&gt;&lt;b data-path-to-node=&quot;25,0,1,0,0&quot; data-index-in-node=&quot;0&quot;&gt;&lt;/b&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;" name="Asynchronous (Non-Blocking)" desc="Thread releases; processed later." tradeoff="Temporal Coupling: Low" fill="#deeaf6" fontColor="#000000" parent="root" placeholders="1" id="tKup20RGIfWm1I5Jdikd-68">
+          <mxCell parent="1" style="whiteSpace=wrap;html=1;rounded=1;fillColor=#deeaf6;strokeColor=#1f4e78;fontColor=#000000;align=center;verticalAlign=top;collapsible=1;treeFolding=1;" vertex="1">
+            <mxGeometry height="95" width="270" x="1420" y="1110" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-71" edge="1" parent="1" source="tKup20RGIfWm1I5Jdikd-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=-0.002;entryY=0.598;entryDx=0;entryDy=0;entryPerimeter=0;" target="lhiUGuGmYxj844ZOmYup-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tKup20RGIfWm1I5Jdikd-72" connectable="0" parent="tKup20RGIfWm1I5Jdikd-71" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="High Volume Bulk Data" vertex="1">
+          <mxGeometry relative="1" x="-0.1674" y="2" as="geometry">
+            <mxPoint y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
