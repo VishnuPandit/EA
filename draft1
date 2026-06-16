@@ -1,77 +1,82 @@
 graph TD
     %% ==========================================
-    %% ACTORS & GLOBAL TIERS
+    %% CLIENT & PUBLIC CLOUD INGRESS (AWS)
     %% ==========================================
-    ExternalClient([External Digital Channel / Partner / Open Banking])
+    Client([External Client Application]) -->|Public Internet| AWS_WAF[AWS WAF / Cloud Shield]
     
-    subgraph GlobalEdge [Tier 1: Global Edge Network / Anycast Security Edge]
-        GSLB[Global Traffic Manager / Volumetric DDoS Shield]
+    subgraph AWS_Cloud [PUBLIC CLOUD - AWS REGION]
+        AWS_WAF --> AWS_Edge_GW[AWS API Gateway / Cloud Edge]
+        AWS_Edge_GW --> AWS_Microservice[Digital Experience Service<br>e.g., Custom Experience API]
     end
 
     %% ==========================================
-    %% DATA CENTER EAST BOUNDARY
+    %% HYBRID TRANSIT LAYER (DIRECT CONNECT)
     %% ==========================================
-    subgraph DCEast [DATA CENTER EAST]
-        F5_East[F5 BIG-IP / Core Firewall<br>Network Edge Ingress]
+    AWS_Microservice -->|Hybrid Ingress Request| DX_Router{AWS Direct Connect<br>Global Routing / GSLB}
+
+    %% ==========================================
+    %% DATA CENTER EAST (PRIMARY REGION A)
+    %% ==========================================
+    subgraph DC_East [DATA CENTER EAST]
+        F5_East[F5 BIG-IP<br>Network Perimeter Ingress]
+        DC_Edge_East[DC Edge Gateway<br>Layer 7 Security Shield]
         
-        subgraph PBC_Alpha [PBC Domain: Alpha Cluster / Namespace]
-            GW_Alpha[Lightweight API Gateway<br>Domain Gatekeeper]
-            Service_Alpha[Business Logic / Pods]
-            GW_Alpha --> Service_Alpha
+        subgraph Domain_Payments_East [Payments Bounded Context - East]
+            Dom_GW_Pay_East[Payments Domain Gateway<br>Lightweight Proxy]
+            PBC_Pay_Exec[Payment Execution Service]
+            PBC_Settlement[Settlement Service]
         end
 
-        subgraph PBC_Beta [PBC Domain: Beta Cluster / Namespace]
-            GW_Beta[Lightweight API Gateway<br>Domain Gatekeeper]
-            Service_Beta[Business Logic / Pods]
-            GW_Beta --> Service_Beta
-        end
+        F5_East -->|L4 Network Route| DC_Edge_East
+        DC_Edge_East -->|L7 Context Route| Dom_GW_Pay_East
+        Dom_GW_Pay_East --> PBC_Pay_Exec
+        Dom_GW_Pay_East --> PBC_Settlement
         
-        F5_East -->|Direct Node Route| GW_Alpha
-        F5_East -->|Direct Node Route| GW_Beta
+        Kafka_East[[Kafka Cluster: East]]
+        PBC_Pay_Exec -.->|Async Event| Kafka_East
     end
 
     %% ==========================================
-    %% DATA CENTER WEST BOUNDARY
+    %% DATA CENTER WEST (SECONDARY/ASYMMETRIC REGION B)
     %% ==========================================
-    subgraph DCWest [DATA CENTER WEST]
-        F5_West[F5 BIG-IP / Core Firewall<br>Network Edge Ingress]
+    subgraph DC_West [DATA CENTER WEST]
+        F5_West[F5 BIG-IP<br>Network Perimeter Ingress]
+        DC_Edge_West[DC Edge Gateway<br>Layer 7 Security Shield]
         
-        subgraph PBC_Gamma [PBC Domain: Gamma Cluster / Namespace]
-            GW_Gamma[Lightweight API Gateway<br>Domain Gatekeeper]
-            Service_Gamma[Business Logic / Pods]
-            GW_Gamma --> Service_Gamma
+        subgraph Domain_Core_West [Core Banking Bounded Context - West]
+            Dom_GW_Core_West[Core Banking Domain Gateway<br>Lightweight Proxy]
+            PBC_Ledger[Ledger Ledger Service]
         end
+
+        F5_West -->|L4 Network Route| DC_Edge_West
+        DC_Edge_West -->|L7 Context Route| Dom_GW_Core_West
+        Dom_GW_Core_West --> PBC_Ledger
         
-        F5_West -->|Direct Node Route| GW_Gamma
+        Kafka_West[[Kafka Cluster: West]]
+        Kafka_West -.->|Async Event| PBC_Ledger
     end
 
     %% ==========================================
-    %% BACKBONE & TRANSIT CROSSINGS
+    %% BACKBONE TRANSIT LINKS
     %% ==========================================
-    DC_Backbone((High-Speed Dedicated Private Interconnect Link))
+    DX_Router -->|Route to East| F5_East
+    DX_Router -->|Route to West| F5_West
+    
+    %% Cross-DC Sync Gateway-to-Gateway Fallback (The Exception)
+    Dom_GW_Pay_East ===>|Cross-DC Sync Command| F5_West
+    
+    %% Cross-DC Eventual Consistency (The Standard)
+    Kafka_East -.->|Asynchronous Replication| Kafka_West
 
-    %% North-South External Entry
-    ExternalClient -->|mTLS over Public Internet| GSLB
-    GSLB -->|Route to East| F5_East
-    GSLB -->|Route to West| F5_West
-
-    %% East-West Traffic Paths
-    %% Intra-DC Cross-Domain (Alpha to Beta)
-    Service_Alpha -->|Intra-DC East-West Hop<br>Bypasses Perimeter F5| GW_Beta
-
-    %% Inter-DC Cross-Domain (Beta East to Gamma West)
-    Service_Beta -->|Egress| DC_Backbone
-    DC_Backbone -->|Ingress| F5_West
-
-    %% Styling and Themes
-    classDef global fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px;
+    %% Styling Elements
+    classDef cloud fill:#fff3e0,stroke:#ffe082,stroke-width:2px;
     classDef network fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
-    classDef gateway fill:#e8f5e9,stroke:#388e3c,stroke-width:2px;
-    classDef logic fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
-    classDef backbone fill:#ede7f6,stroke:#5e35b1,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef dcedge fill:#ffebee,stroke:#ef5350,stroke-width:2px;
+    classDef domgw fill:#e8f5e9,stroke:#66bb6a,stroke-width:2px;
+    classDef pbc fill:#f3e5f5,stroke:#ab47bc,stroke-width:2px;
 
-    class GSLB global;
-    class F5_East,F5_West network;
-    class GW_Alpha,GW_Beta,GW_Gamma gateway;
-    class Service_Alpha,Service_Beta,Service_Gamma logic;
-    class DC_Backbone backbone;
+    class AWS_WAF,AWS_Edge_GW,AWS_Microservice cloud;
+    class F5_East,F5_West,DX_Router network;
+    class DC_Edge_East,DC_Edge_West dcedge;
+    class Dom_GW_Pay_East,Dom_GW_Core_West domgw;
+    class PBC_Pay_Exec,PBC_Settlement,PBC_Ledger pbc;
