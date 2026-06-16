@@ -1,176 +1,50 @@
-Branch 1: Synchronous Patterns
-1. RESTful API (HTTP/JSON)
-What is this Pattern: A synchronous, text-based, resource-oriented protocol utilizing standard HTTP methods. Communication is direct, point-to-point, and blocking.
-Typical Use Cases: External Open Banking (PSD2) APIs, Public B2B APIs, simple internal CRUD lifecycle management of standard domain entities (e.g., POST /beneficiaries).
-DOs:
-Design APIs using strict OpenAPI 3.0 specs before writing code (Contract-First).
-Implement strict HTTP status codes (200,201,400,401,403,429,503).
-Use standard stateless JWTs for propagation of identity and entitlements.
-DON'Ts:
-Do not use REST for internal high-throughput service-to-service communication.
-Do not embed complex transaction orchestration logic inside a single REST endpoint.
-Do not expose internal database keys; use non-sequential UUIDv4 or domain tokens.
-What to Watch Out For: The Cascading Failure Trap. A slow downstream service will exhaust the upstream service's TomCat/Netty connection pool within seconds, taking down unaffected business lines.
-Scaffolding & Templates: Standard Spring Boot or .NET WebAPI project template pre-configured with the enterprise API Gateway SDK, OpenAPI generator plugin, global exception handlers, and an embedded standard mutual TLS (mTLS) filter.
-Telemetry & Auditability: Mandatory injection of X-Correlation-ID and X-B3-TraceId headers. Automatic logging of request/response sizes, execution latency, and client ID masks (never log PII or raw pan data).
-Typical Next Steps: Register the generated OpenAPI spec in the centralized Enterprise API Portal and request a linting scan against corporate security standards.
-2. Federated GraphQL
-What is this Pattern: A managed data aggregation layer where a central Gateway composes independent, domain-specific graph schemas (Subgraphs) into a single, cohesive schema for client querying.
-Typical Use Cases: Digital Banking front-ends (Mobile/Web dashboards) needing to stitch a single unified view from checking accounts, credit cards, and loan balances in a single network trip.
-DOs:
-Use an automated schema registry to track subgraph changes and prevent breaking field deletions.
-Use the DataLoader pattern to batch and cache sub-queries, preventing the N+1 database query problem.
-Implement strict Query Cost Analysis at the gateway layer to drop heavy queries before execution.
-DON'Ts:
-Do not use GraphQL for backend-to-backend system integrations or batch processing.
-Do not pass raw GraphQL queries directly to relational databases without a protective abstraction layer.
-Do not use GraphQL if the underlying subgraphs are highly unstable or untrusted.
-What to Watch Out For: Denial of Service via Query Nesting. A malicious or poorly written client query can ask for deep, circular relationships (e.g., User → Accounts → Transactions → Account → User) that can overwhelm downstream microservice CPU and memory.
-Scaffolding & Templates: Subgraph template pre-integrated with Apollo Federation or Netflix DGS libraries, incorporating pre-built query depth limiters and standardized error mapping components.
-Telemetry & Auditability: Trace metrics exported via OpenTelemetry tracing fields down to the individual field-resolver level, allowing tracing of exactly which backend subgraph caused a slow aggregation.
-Typical Next Steps: Submit the proposed Subgraph schema changes to the Domain Data Stewards for structural compatibility validation.
-3. gRPC / Protobuf
-What is this Pattern: A high-performance, open-source remote procedure call framework that uses HTTP/2 for transport and Protocol Buffers (Protobuf) as the binary serialization mechanism.
-Typical Use Cases: Low-latency, high-throughput internal microservice-to-microservice communication within a secure network boundary (e.g., real-time fraud checking during a card transaction authorization flow).
-DOs:
-Enforce strict .proto contract repositories shared via git submodules or internal artifact packages.
-Leverage HTTP/2 multiplexing and stream keep-alives to reuse underlying TCP connections.
-Implement deadlines (grpc-timeout) on every call to free resources under load.
-DON'Ts:
-Do not expose gRPC endpoints directly to the public internet or external partner channels without an Envoy-based transoding layer.
-Do not use gRPC if your primary engineering stack lacks strong tooling support for binary protocols.
-What to Watch Out For: Load Balancing Friction. Traditional Layer 4 load balancers cannot distribute HTTP/2 traffic efficiently because they balance TCP connections, not individual multiplexed requests. You must use a Layer 7 proxy (e.g., Envoy, Linkerd) or client-side load balancing.
-Scaffolding & Templates: Base project container with pre-configured protoc build pipelines, automatic stub generation, and pre-integrated interceptors for logging and health checks.
-Telemetry & Auditability: gRPC Interceptors acting as middleware to automatically capture metadata context, record gRPC status codes, and propagate transaction correlation IDs across threads.
-Typical Next Steps: Verify that your target Kubernetes environment has a Service Mesh or ingress configured to support HTTP/2 end-to-end routing.
-4. API Façade / Wrapper
-What is this Pattern: A lightweight architectural abstraction layer deployed on top of complex, highly coupled legacy systems or core bank packages to translate them into clean, modern API contracts.
-Typical Use Cases: Modernizing access to a mainframe COBOL application, CICS transaction engine, or a third-party commercial off-the-shelf core banking platform.
-DOs:
-Keep the Façade strictly stateless and thin. It should only map schemas and translate protocols.
-Implement an explicit Anti-Corruption Layer (ACL) within the façade to protect modern domain models from legacy data pollution.
-Implement aggressive rate-limiting to defend vulnerable legacy backends from modern traffic spikes.
-DON'Ts:
-Do not add any core business logic, orchestration, or multi-domain routing inside the Façade. (That is an ESB anti-pattern).
-Do not allow the Façade to bypass core security structures; it must map modern OAuth tokens to legacy security mechanisms (e.g., RACF IDs).
-What to Watch Out For: The MIPS Cost Explosion. Converting a mainframe interface into a modern RESTful API makes it easy for developers to query it repeatedly. This can inadvertently cause mainframe MIPS usage (and billing costs) to surge.
-Scaffolding & Templates: Integration-focused template containing automated mapping utilities (such as MapStruct), mainframe protocol connectors, and a pre-configured Circuit Breaker (Resilience4j).
-Telemetry & Auditability: Map modern OpenTelemetry trace headers directly to legacy tracking identifiers (such as IBM MQ correlation IDs or CICS task IDs) to guarantee end-to-end tracing.
-Typical Next Steps: Execute load testing against the legacy sandbox to define the maximum safe rate-limiting threshold before deploying the Façade.
-Branch 2: Asynchronous Patterns
-A1. Message Queue (P2P)
-What is this Pattern: Point-to-Point asynchronous communication where a producer sends a message to a specific queue, and exactly one consumer processes it. The message is held safely in the queue until processed.
-Typical Use Cases: Guaranteed delivery of processing tasks across distinct systems, such as queueing a transaction notification SMS or routing an internal request to a payment clearing system.
-DOs:
-Ensure the consumer is completely idempotent by using a unique transaction key to prevent double-processing.
-Define a dedicated Dead Letter Queue (DLQ) for every primary processing queue.
-Set explicit Time-To-Live (TTL) values on messages where the financial value expires quickly.
-DON'Ts:
-Do not use a point-to-point queue if more than one system needs to consume the same event.
-Do not store massive file attachments inside the message body; pass references instead.
-What to Watch Out For: Poison Pill Blocking. If a consumer encounters a malformed message that it cannot parse, and the application doesn't trap the error, the message may continuously roll back to the top of the queue. This can halt the entire processing pipeline.
-Scaffolding & Templates: Consumer/Producer templates with integrated connection pool management, transactional acknowledgment configurations (CLIENT_ACKNOWLEDGE), and automated DLQ diversion logic.
-Telemetry & Auditability: Automatic injection of tracing context into the message header metadata. Real-time metric tracking for queue depth, consumer lag, and unparseable messages.
-Typical Next Steps: Register the queue layout and naming scheme in the Enterprise Messaging Catalog to prevent namespace collisions.
-+------------------+     +-----------------------+     +-------------------+
-|  Upstream App    | --> | Queue (Load Leveler)  | --> | Vulnerable Legacy |
-| (Traffic Spikes) |     +-----------------------+     |   (Steady State)  |
-+------------------+                                   +-------------------+
-A2. Saga Pattern (Choreography)
-What is this Pattern: A distributed transactional pattern that manages multi-service workflows via local database transactions and asynchronous event broadcasts. There is no central orchestrator; each service listens to events and executes its step or issues compensating actions on failure.
-Typical Use Cases: Complex microservice transactions like processing a home loan application that requires funds reservation, collateral validation, and credit underwriting steps to succeed or fail as a coherent unit.
-DOs:
-Design every participant service to be completely idempotent and capable of handling out-of-order events.
-Build explicit, automated compensating events for every happy-path event step (e.g., ReverseFundsReservation).
-Use a dedicated correlation ID across every single step of the Saga transaction lifecycle.
-DON'Ts:
-Do not use Choreography if the workflow involves more than 4-5 steps across separate business units (at that scale, switch to an Orchestration model to prevent dependency loops).
-Do not allow a service to commit a local transaction without immediately broadcasting its corresponding exit event (use the Outbox pattern here).
-What to Watch Out For: The Cyclic Dependency Nightmare. Without a central controller, service A listens to B, B listens to C, and C listens to A. If an error occurs, it can trigger a cascading loop of compensating events that is exceptionally difficult to debug.
-Scaffolding & Templates: Multi-module template pre-configured with Event Sourcing libraries or transactional outbox patterns, complete with boilerplate code for handling compensating event failures.
-Telemetry & Auditability: Centralized logging of Saga state machine transitions to a unified datastore (e.g., Elasticsearch). This allows audit teams to reconstruct the precise history of any distributed transaction.
-Typical Next Steps: Map out the entire Saga lifecycle, including happy paths and failure scenarios, using a sequence diagram before generating the project structure.
-B1. Event Streaming (Pub/Sub)
-What is this Pattern: A high-throughput, partitioned, append-only log model where producers publish events to a topic, and multiple independent consumer groups pull events and process them at their own pace.
-Typical Use Cases: Real-time Core Banking transaction streams, streaming event data for live Fraud Detection analytics, and ledger state replication across domain lines.
-DOs:
-Use a strict schema governance framework (such as Avro or JSON Schema) combined with a central Schema Registry.
-Select an appropriate partitioning key (e.g., account_id) to ensure strict message ordering within each log partition.
-Configure your producers with acks=all for high-value financial data to guarantee zero data loss.
-DON'Ts:
-Do not treat an event stream as a traditional relational database or a long-term queryable CRUD datastore.
-Do not assume global message ordering across an entire topic; ordering is only guaranteed within an individual partition.
-What to Watch Out For: Consumer Lag Spirals. If a downstream consumer's processing logic slows down (e.g., due to database blocks), it will fall behind the live stream. If the stream volume exceeds the consumer's recovery rate, the processing lag will grow indefinitely, risking data eviction based on retention limits.
-Scaffolding & Templates: Cloud-ready Kafka client template with embedded Avro serialization configurations, automated retry logic using companion retry/dlt topics, and built-in health checks.
-Telemetry & Auditability: Real-time tracking of consumer lag metrics, partition allocation shifts, and schema definition versions. This ensures clear operational visibility into data transit.
-Typical Next Steps: Define your data retention policy (e.g., 7 days or infinite compaction) based on regulatory requirements and data storage guardrails.
-B2. Change Data Capture (CDC)
-What is this Pattern: A low-level data integration pattern that monitors and captures insert, update, and delete operations directly from a database's transaction log, publishing those mutations as asynchronous events.
-Typical Use Cases: Modernizing legacy cores using the Strangler Fig pattern, replicating operational data out of a mainframe DB2/Oracle instance into a modern cloud read-replica without altering the legacy application code.
-DOs:
-Route raw database change events through a transformation layer to map internal storage layouts into clean, public Domain Events.
-Ensure downstream consumers are fully prepared to handle rapid, consecutive state updates for the same record.
-Secure the transaction log reader account with strict database access permissions.
-DON'Ts:
-Do not expose raw, unmapped database table schemas directly to external or public event topics.
-Do not rely on CDC if the underlying database schema changes frequently without a strict deprecation policy.
-What to Watch Out For: The Schema Evolution Trap. A minor schema modification performed by a DBA on the underlying database (e.g., altering a column width or renaming a field) can instantly break downstream consumer applications if it bypasses application validation layers.
-Scaffolding & Templates: Debezium/Kafka Connect configuration templates bundled with an abstraction layer template that automatically transforms raw database rows into domain-driven events.
-Telemetry & Auditability: Real-time alerting on database transaction log reading lag, alongside automated validation checks to compare source and target database row counts.
-Typical Next Steps: Establish a joint change-management policy between the Data Administration (DBA) team and the integration engineers to coordinate all database modifications.
-B3. Webhook
-What is this Pattern: An asynchronous HTTP push pattern where a server automatically POSTs an event payload to a pre-configured URL provided by an external client application as soon as an event occurs.
-Typical Use Cases: Notifying external Fintech partners or corporate client ERP systems about asynchronous transaction state changes, such as a payment clearing confirmation.
-DOs:
-Secure every payload by including a cryptographic signature header (e.g., X-Hub-Signature-256 using an HMAC key) so clients can verify authenticity.
-Implement a strict exponential back-off and retry schedule to handle client endpoint outages.
-Provide a self-service client dashboard for webhook URL management and manual event re-delivery.
-DON'Ts:
-Do not transmit highly sensitive, unencrypted PII data inside a raw webhook payload.
-Do not allow a slow or hanging client endpoint response to block your internal core event processing threads.
-What to Watch Out For: Egress Thread Pool Exhaustion. If an external client's receiver server experiences a slowdown and holds the HTTP connection open, your outgoing webhook delivery worker can quickly run out of available socket descriptors or execution threads. This can cause delivery queues to back up.
-Scaffolding & Templates: Reliable egress webhook dispatcher engine template built with non-blocking I/O architectures, an embedded circuit breaker, and automated signature creation components.
-Telemetry & Auditability: Comprehensive logging of external delivery attempts, client response latencies, and HTTP status codes, providing a clear audit trail for external SLA reporting.
-Typical Next Steps: Publish the webhook verification security requirements and payload schemas to the bank's external Developer Portal.
-B4. Server-Sent Events (SSE)
-What is this Pattern: A lightweight, unidirectional push technology where a client establishes a long-lived, persistent HTTP connection with the server, and the server continuously streams text-based events over that single channel.
-Typical Use Cases: Delivering real-time balance updates, transactional alerts, or live financial market feeds directly into client web or mobile user interfaces.
-DOs:
-Use HTTP/2 or HTTP/3 for transport to bypass the historical browser limitation of six concurrent connections per domain.
-Ensure the connection handler can automatically recover from network drops by passing the last seen event ID (Last-Event-ID).
-Implement a connection timeout threshold to disconnect and clean up idle or orphaned client sockets.
-DON'Ts:
-Do not use SSE if the application requires bi-directional, full-duplex communication over the same channel (switch to WebSockets for true bi-directional needs).
-Do not attempt to stream large binary objects over SSE; it is designed for text-based event protocols.
-What to Watch Out For: Stateful Connection Scaling Limitations. Because every connected client holds an open, stateful network socket with a specific server instance, traditional stateless horizontal scaling rules change. Your infrastructure must handle high concurrent connection volumes across your load balancers and ingress paths.
-Scaffolding & Templates: Reactive web server template (e.g., Spring WebFlux or .NET Kestrel) configured to support SSE stream delivery, with built-in heartbeats and authentication validation middleware.
-Telemetry & Auditability: Monitoring metrics tracking total active concurrent client streams, connection durations, and delivery dropped-channel rates.
-Typical Next Steps: Verify that all upstream network infrastructure, including edge firewalls and load balancers, is configured to allow long-lived streaming connections without premature timeouts.
-C1. Polling
-What is this Pattern: A recurring, pull-based communication pattern where a client periodically queries a provider system via standard API calls to check if new data or state updates are available.
-Typical Use Cases: Integrating with restrictive, closed third-party legacy applications or core packages that lack native support for event broadcasting, webhooks, or streaming.
-DOs:
-Implement an adjusted, exponential back-off strategy alongside randomized jitter to prevent multiple polling clients from striking the database simultaneously.
-Leverage cache-validation headers (such as ETag and If-None-Match) to reduce backend processing loads when data hasn't changed.
-Keep the query footprint small by applying strict filtering to target only delta records.
-DON'Ts:
-Do not use frequent, high-frequency polling as a substitute for real-time integration paths if alternative event patterns are available.
-Do not execute heavy, un-indexed database queries during a polling iteration loop.
-What to Watch Out For: The Resource Leak Waste. Polling frequently results in empty responses, which can consume significant CPU cycles, network bandwidth, and database connection pools for no functional return. This can impact overall system efficiency.
-Scaffolding & Templates: Scheduled batch task execution wrapper equipped with persistent state trackers (to store the last processed timestamp), back-off algorithms, and concurrency protection guardrails.
-Telemetry & Auditability: Track metrics assessing the ratio of useful data fetches against empty poll operations, alongside monitoring the execution duration of the query cycles.
-Typical Next Steps: Work with the platform provider to establish an appropriate, safe polling frequency interval that protects system stability.
-C2. File-Based Integration
-What is this Pattern: A traditional data exchange mechanism where bulk datasets are generated, written to a structured file (such as CSV, XML, or Fixed-Width), and transmitted securely via Managed File Transfer (MFT) protocols.
-Typical Use Cases: End-of-Day (EOD) core ledger balance clearing, bulk ACH/NACHA payment settlement runs, and high-volume data transfers to core regulatory reporting engines (e.g., Basel III/IV datasets).
-DOs:
-Enforce strict, end-to-end PGP encryption on every file before it transits the network path.
-Always transmit a companion control file containing metadata validation metrics (e.g., line counts, cryptographic hashes) to verify file integrity before processing.
-Store and validate file layouts against explicit version-controlled data schemas.
-DON'Ts:
-Do not use local, unsecured application server storage paths for file placement; always utilize a dedicated, enterprise-governed secure MFT storage zone.
-Do not initiate a file import or parsing routine without first validating the companion control file's checksum.
-What to Watch Out For: The Silent Failure Corruption. A file transfer operation can appear to complete successfully while leaving the underlying data truncated or corrupted due to mid-transit network anomalies or system storage limits. Without metadata validation, this can corrupt downstream systems of record.
-Scaffolding & Templates: Batch file processing pipeline engine (e.g., Spring Batch) pre-configured with secure PGP decryption modules, chunk-based transaction boundary management, and file format checking tools.
-Telemetry & Auditability: Comprehensive logging of file processing journeys: capturing file name patterns, file size metrics, processing timelines, record counts, and database persistence results for audit review.
-Typical Next Steps: Establish a strict file retention and archival purge policy on your secure storage zones to meet data privacy and storage compliance mandates.
+graph TD
+    %% Define External Actor
+    Partner([External Partner / Client App])
+
+    %% Cloud Boundary
+    subgraph Cloud[Public Cloud - AWS/Azure VPC]
+        WAF[Web Application Firewall<br>Edge Protection & DDoS]
+        Apigee[Apigee Edge / Global API Gateway<br>Macro-Policy, Rate Limits & Monetization]
+        IdP[[Identity Provider<br>Okta/PingFederate]]
+
+        WAF -->|Sanitized Traffic| Apigee
+        Apigee -.->|Token Exchange: External OAuth to Internal JWT| IdP
+    end
+
+    %% Network Transit
+    Transit((AWS Direct Connect / ExpressRoute<br>Dedicated Private mTLS Link))
+
+    %% On-Premises Boundary
+    subgraph OnPrem[On-Premises Physical Data Center]
+        F5[Internal Load Balancer<br>F5 BIG-IP / HAProxy]
+        
+        subgraph PBC[Packaged Business Capability Bounded Context]
+            InternalGW[Internal API Gateway<br>Layer 7 or Mule Gateway<br>Micro-Policy & Local Throttling]
+            MuleSoft[MuleSoft Runtime<br>Process & System APIs]
+        end
+
+        Core[(Legacy Core Banking<br>Mainframe/System of Record)]
+
+        F5 -->|Route to Domain| InternalGW
+        InternalGW -->|Validate Internal JWT & Pass Traceparent| MuleSoft
+        MuleSoft -->|Transform JSON to SOAP/Copybook| Core
+    end
+
+    %% Flow Connections
+    Partner -->|mTLS / Public Internet| WAF
+    Apigee -->|Pass Internal JWT & W3C Trace Context| Transit
+    Transit --> F5
+
+    %% Styling classes to make it visually distinct (Bank/Arch style)
+    classDef external fill:#ececff,stroke:#9370db,stroke-width:2px;
+    classDef security fill:#ffebee,stroke:#c62828,stroke-width:2px;
+    classDef gateway fill:#e0f7fa,stroke:#006064,stroke-width:2px;
+    classDef integration fill:#fff3e0,stroke:#ef6c00,stroke-width:2px;
+    classDef database fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+
+    class Partner external;
+    class WAF security;
+    class Apigee,InternalGW gateway;
+    class MuleSoft integration;
+    class Core database;
