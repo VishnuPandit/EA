@@ -1,82 +1,470 @@
-graph TD
-    %% ==========================================
-    %% CLIENT & PUBLIC CLOUD INGRESS (AWS)
-    %% ==========================================
-    Client([External Client Application]) -->|Public Internet| AWS_WAF[AWS WAF / Cloud Shield]
-    
-    subgraph AWS_Cloud [PUBLIC CLOUD - AWS REGION]
-        AWS_WAF --> AWS_Edge_GW[AWS API Gateway / Cloud Edge]
-        AWS_Edge_GW --> AWS_Microservice[Digital Experience Service<bsdr>e.g., Custom Experience API]
-    end
-
-    %% ==========================================
-    %% HYBRID TRANSIT LAYER (DIRECT CONNECT)
-    %% ==========================================
-    AWS_Microservice -->|Hybrid Ingress Request| DX_Router{AWS Direct Connect<br>Global Routing / GSLB}
-
-    %% ==========================================
-    %% DATA CENTER EAST (PRIMARY REGION A)
-    %% ==========================================
-    subgraph DC_East [DATA CENTER EAST]
-        F5_East[F5 BIG-IP<br>Network Perimeter Ingress]
-        DC_Edge_East[DC Edge Gateway<br>Layer 7 Security Shield]
-        
-        subgraph Domain_Payments_East [Payments Bounded Context - East]
-            Dom_GW_Pay_East[Payments Domain Gateway<br>Lightweight Proxy]
-            PBC_Pay_Exec[Payment Execution Service]
-            PBC_Settlement[Settlement Service]
-        end
-
-        F5_East -->|L4 Network Route| DC_Edge_East
-        DC_Edge_East -->|L7 Context Route| Dom_GW_Pay_East
-        Dom_GW_Pay_East --> PBC_Pay_Exec
-        Dom_GW_Pay_East --> PBC_Settlement
-        
-        Kafka_East[[Kafka Cluster: East]]
-        PBC_Pay_Exec -.->|Async Event| Kafka_East
-    end
-
-    %% ==========================================
-    %% DATA CENTER WEST (SECONDARY/ASYMMETRIC REGION B)
-    %% ==========================================
-    subgraph DC_West [DATA CENTER WEST]
-        F5_West[F5 BIG-IP<br>Network Perimeter Ingress]
-        DC_Edge_West[DC Edge Gateway<br>Layer 7 Security Shield]
-        
-        subgraph Domain_Core_West [Core Banking Bounded Context - West]
-            Dom_GW_Core_West[Core Banking Domain Gateway<br>Lightweight Proxy]
-            PBC_Ledger[Ledger Ledger Service]
-        end
-
-        F5_West -->|L4 Network Route| DC_Edge_West
-        DC_Edge_West -->|L7 Context Route| Dom_GW_Core_West
-        Dom_GW_Core_West --> PBC_Ledger
-        
-        Kafka_West[[Kafka Cluster: West]]
-        Kafka_West -.->|Async Event| PBC_Ledger
-    end
-
-    %% ==========================================
-    %% BACKBONE TRANSIT LINKS
-    %% ==========================================
-    DX_Router -->|Route to East| F5_East
-    DX_Router -->|Route to West| F5_West
-    
-    %% Cross-DC Sync Gateway-to-Gateway Fallback (The Exception)
-    Dom_GW_Pay_East ===>|Cross-DC Sync Command| F5_West
-    
-    %% Cross-DC Eventual Consistency (The Standard)
-    Kafka_East -.->|Asynchronous Replication| Kafka_West
-
-    %% Styling Elements
-    classDef cloud fill:#fff3e0,stroke:#ffe082,stroke-width:2px;
-    classDef network fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
-    classDef dcedge fill:#ffebee,stroke:#ef5350,stroke-width:2px;
-    classDef domgw fill:#e8f5e9,stroke:#66bb6a,stroke-width:2px;
-    classDef pbc fill:#f3e5f5,stroke:#ab47bc,stroke-width:2px;
-
-    class AWS_WAF,AWS_Edge_GW,AWS_Microservice cloud;
-    class F5_East,F5_West,DX_Router network;
-    class DC_Edge_East,DC_Edge_West dcedge;
-    class Dom_GW_Pay_East,Dom_GW_Core_West domgw;
-    class PBC_Pay_Exec,PBC_Settlement,PBC_Ledger pbc;
+{
+  "version": "30.2.2",
+  "pages": [
+    {
+      "id": "BIJsytodz3XM2byIR8Yo",
+      "name": "Page-2",
+      "cells": [
+        {
+          "id": "1",
+          "type": "layer"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-1",
+          "type": "edge",
+          "parent": "1",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-2",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-5"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-2",
+          "type": "node",
+          "parent": "1",
+          "label": "Public Mobile/ Web Client"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-3",
+          "type": "edge",
+          "parent": "1",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-5",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-111"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-4",
+          "type": "edge",
+          "parent": "1",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-5",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-124"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-5",
+          "type": "node",
+          "parent": "1",
+          "label": "External GSLB-Edge DNS Routing\n(Route53/F5 GTM)",
+          "html": "External GSLB-Edge DNS Routing<div>(Route53/F5 GTM)</div>"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-6",
+          "type": "edge",
+          "parent": "1",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-7"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-7",
+          "type": "node",
+          "parent": "1",
+          "label": "Hybrid Cloud Connectivity\n(Direct Connect/ExpressRoute)",
+          "html": "Hybrid Cloud Connectivity<div>(Direct Connect/ExpressRoute)</div>"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-8",
+          "type": "edge",
+          "parent": "1",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-9",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-61"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-9",
+          "type": "node",
+          "parent": "1",
+          "label": "Hybrid Cloud Connectivity\n(Direct Connect/ExpressRoute)",
+          "html": "Hybrid Cloud Connectivity<div>(Direct Connect/ExpressRoute)</div>"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-10",
+          "type": "edge",
+          "parent": "1",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-11",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-55"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-11",
+          "type": "node",
+          "parent": "1",
+          "label": "THis is just a placeholder, not actual data layer. The components are just placeholders"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-12",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-13",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-12",
+          "label": "Datacenter - West"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-14",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-12",
+          "label": "F5 LTM"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-15",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-12",
+          "label": "Firewall"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-16",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-12",
+          "label": "API Gateway"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-17",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-12",
+          "label": "Internal LB"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-18",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-12",
+          "label": "Applications/Services - Composition/Choreography"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-19",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-12"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-20",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-19",
+          "label": "Domain"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-21",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-19",
+          "label": "Domain API Gateway"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-55",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-12",
+          "label": "Data Layer\n(Enterprise MDM/Cache/AI/ML/Analytics)",
+          "html": "Data Layer<div>(Enterprise MDM/Cache/AI/ML/Analytics)</div>"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-56",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-12",
+          "label": "System of Records",
+          "html": "System of Records<div><br></div>"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-57",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-12",
+          "label": "Core Banking"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-58",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-12",
+          "label": "CRM"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-59",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-12",
+          "label": "Mainframe"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-60",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-61",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-60",
+          "label": "Datacenter - West"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-62",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-60",
+          "label": "F5 LTM"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-63",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-60",
+          "label": "Firewall"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-64",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-60",
+          "label": "API Gateway"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-65",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-60",
+          "label": "Internal LB"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-66",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-60",
+          "label": "Applications/Services - Composition/Choreography"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-67",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-60"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-68",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-67",
+          "label": "Domain"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-69",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-67",
+          "label": "Domain API Gateway"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-70",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-67"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-72",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-70",
+          "label": "Optional\nUI/Agentic MCP",
+          "html": "Optional<div>UI/Agentic MCP</div>"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-103",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-60",
+          "label": "Data Layer\n(Enterprise MDM/Cache/AI/ML/Analytics)",
+          "html": "Data Layer<div>(Enterprise MDM/Cache/AI/ML/Analytics)</div>"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-104",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-60",
+          "label": "System of Records",
+          "html": "System of Records<div><br></div>"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-105",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-60",
+          "label": "Core Banking"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-106",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-60",
+          "label": "CRM"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-107",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-60",
+          "label": "Mainframe"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-108",
+          "type": "edge",
+          "parent": "1"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-109",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-108",
+          "label": "MPLS/WAN"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-110",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-111",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-110",
+          "label": "Public Cloud - Region West"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-112",
+          "type": "edge",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-110",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-113",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-117"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-113",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-110",
+          "label": "Cloud WAF"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-114",
+          "type": "edge",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-110",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-115",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-113"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-115",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-110",
+          "label": "Edge DNS/CDN Provider"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-116",
+          "type": "edge",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-110",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-117",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-119"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-117",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-110",
+          "label": "F5"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-118",
+          "type": "edge",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-110",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-119",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-120"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-119",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-110",
+          "label": "API Gateway"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-120",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-110",
+          "label": "K8"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-121",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-110",
+          "label": "microservices"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-122",
+          "type": "edge",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-110",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-120",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-121"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-123",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-124",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-123",
+          "label": "Public Cloud - Region East"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-125",
+          "type": "edge",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-123",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-126",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-130"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-126",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-123",
+          "label": "Cloud WAF"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-127",
+          "type": "edge",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-123",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-128",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-126"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-128",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-123",
+          "label": "Edge DNS/CDN Provider"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-129",
+          "type": "edge",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-123",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-130",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-132"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-130",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-123",
+          "label": "F5"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-131",
+          "type": "edge",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-123",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-132",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-134"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-132",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-123",
+          "label": "API Gateway"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-133",
+          "type": "edge",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-123",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-134",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-135"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-134",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-123",
+          "label": "K8"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-135",
+          "type": "node",
+          "parent": "z1jxIPH5p8aDDe4Ou1xT-123",
+          "label": "microservices"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-136",
+          "type": "edge",
+          "parent": "1",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-120",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-7"
+        },
+        {
+          "id": "z1jxIPH5p8aDDe4Ou1xT-137",
+          "type": "edge",
+          "parent": "1",
+          "source": "z1jxIPH5p8aDDe4Ou1xT-134",
+          "target": "z1jxIPH5p8aDDe4Ou1xT-9"
+        }
+      ]
+    }
+  ]
+}
