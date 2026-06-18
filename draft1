@@ -6,7 +6,7 @@ graph TD
     
     subgraph AWS_Cloud [PUBLIC CLOUD - AWS REGION]
         AWS_WAF --> AWS_Edge_GW[AWS API Gateway / Cloud Edge]
-        AWS_Edge_GW --> AWS_Microservice[Digital Experience Service<br>e.g., Custom Experience API]
+        AWS_Edge_GW --> AWS_Microservice[Digital Experience Service<bsdr>e.g., Custom Experience API]
     end
 
     %% ==========================================
