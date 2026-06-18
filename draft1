@@ -1,57 +1,46 @@
-Architecture Decision Document (ADD): Hybrid API Routing & Integration Patterns
-Context Understanding The enterprise operates a hybrid-cloud topology comprising Public Cloud (Region West/East) and On-Premises Datacenters (Primary/DR). As part of our API-led modernization and Open Banking initiatives, we must standardize how traffic traverses physical security boundaries to ensure auditability, mitigate operational drift, and protect legacy Systems of Record (Mainframe/Core Banking) from synchronous overload.
-Key Assumptions
-	•	Network Backbone: AWS Direct Connect / Azure ExpressRoute provides highly available, private transit between Cloud and On-Prem. MPLS/SD-WAN connects the datacenters.
-	•	Identity: Public Cloud uses modern OAuth2/OIDC (JWTs). Legacy Core systems require mTLS, basic auth, or legacy mainframe tokens (e.g., RACF).
-	•	Zero Trust: We assume the internal network is "hostile." Cross-boundary traffic must be authenticated and authorized.
-Use Case 1: External Partner (B2B) Calls Data Center
-Scenario: A fintech partner or corporate client consumes an Open Banking API (e.g., Payment Initiation or Account Information) hosted on-premises.
-	•	Option A: Dedicated Partner Gateway (On-Prem DMZ). Partners connect directly to an on-premises B2B API Gateway via dedicated IPsec tunnels or public IPs exposed via the physical DMZ.
-	◦	Pros: Direct path, completely isolates B2B traffic from public consumer traffic.
-	◦	Cons: Requires exposing on-prem IPs to the internet; lacks cloud-scale DDoS elasticity; duplicates WAF management.
-	•	Option B: Unified Cloud Edge Transit. Partners connect via the Public Cloud Edge (GSLB → Cloud WAF →Cloud API GW), which then securely proxies the request down the Direct Connect line to the DC Ingress Gateway.
-	◦	Pros: Consolidates all internet-facing attack surfaces in the public cloud. Leverages elastic WAF and DDoS protection.
-	◦	Cons: Adds a routing hop; requires managing B2B MTLS certificates at the Cloud API Gateway.
-Recommendation: Option B (Unified Cloud Edge Transit). > Rationale: In a modern banking architecture, the on-premises datacenter should ideally have zero inbound internet exposure. By routing Open Banking and B2B partners through the Cloud API Gateway, we standardize edge security policies (rate limiting, IP allowlisting, OAuth validation). The Cloud API Gateway acts as the public front door, and the DC Ingress Gateway acts as the internal border control (token translation, ingress policy). Traversal Path:External Partner → Cloud WAF → Cloud API GW → DC Ingress Gateway → Domain API GW → Core.
-Use Case 2: Cross-Datacenter Routing (East-West between DCs)
-Scenario: A Microservice in DC-West needs to synchronously call a Domain API hosted exclusively in DC-East (e.g., calling a centralized Risk Scoring engine).
-	•	Option A: Direct Domain-to-Domain. The microservice in DC-West calls the Domain API Gateway in DC-East directly over the MPLS WAN.
-	◦	Pros: Lowest latency; simple to set up initially.
-	◦	Cons: Punches point-to-point firewall holes across datacenters. Creates a "mesh" of unmanageable firewall rules over time.
-	•	Option B: Transit via DC Ingress Gateways. The request routes from DC-West App Layer → DC-East Ingress Gateway → DC-East Domain API Gateway.
-	◦	Pros: Single point of ingress for the destination datacenter. Strict network segmentation. Centralized cross-site logging.
-	◦	Cons: Slight latency increase (approx. 5-10ms) due to the perimeter inspection.
-Recommendation: Option B (Transit via DC Ingress Gateways). > Rationale: We must prevent "firewall Swiss cheese." Treating DC-East as a distinct security zone relative to DC-West ensures that a compromise or lateral movement in one datacenter is caught at the perimeter of the other. The DC Ingress Gateway serves as the centralized enforcement point for cross-site mTLS and rate limits, protecting the target domain from "friendly fire" DDoS if the calling domain scales out aggressively. Traversal Path: DC West Domain →Internal LB → MPLS WAN → DC East Ingress Gateway → DC East Domain GW.
-Use Case 3: Hybrid Cloud Routing (Cloud K8s to On-Prem)
-Scenario: A cloud-native digital channel microservice (e.g., Mobile App BFF in Azure/AWS) must fetch customer ledger balances from the on-prem Mainframe.
-	•	Option A: Direct to Domain Gateway. Cloud Microservice calls the On-Prem Domain API Gateway directly over Direct Connect.
-	◦	Cons: Exposes internal domain network topology to the cloud. Forces the Domain Gateway to handle external token translation (JWT to internal token).
-	•	Option B: Cloud Internal Gateway to DC Ingress. Cloud Microservice routes to a dedicated "Egress" API Gateway in the cloud, which then connects to the DC Ingress Gateway.
-	◦	Cons: Introduces unnecessary proxy hops ("layer cake" anti-pattern). Over-engineers the cloud side.
-	•	Option C: Direct to DC Ingress Gateway. Cloud Microservice calls the physical DC Ingress Gateway over Direct Connect, which translates the request and proxies it to the Domain Gateway.
-	◦	Pros: Balances performance with security. Keeps the cloud lightweight while enforcing strict Border Control at the physical datacenter edge.
-Recommendation: Option C (Direct to DC Ingress Gateway). Rationale: As agreed in our prior review, this honors the "Border Control" pattern without succumbing to business API chaining. The DC Ingress Gateway validates the cloud identity (JWT), exchanges it for the required internal legacy identity (e.g., RACF/mTLS), and performs content-agnostic routing to the Domain Gateway. The Domain Gateway handles the domain-specific business logic and integration with the System of Record. Traversal Path: Cloud Microservice → Direct Connect → DC Ingress Gateway → Domain Gateway → Core Banking.
-
-Architecture Decision Document (ADD): Supplemental Use Cases
-Use Case 4: Intra-Datacenter Routing (East-West within the same DC)
-Scenario: A microservice in the 'Digital Channels' domain (e.g., Mobile BFF) needs to synchronously call a service in the 'Payments' domain (e.g., Payment Execution) residing in the same datacenter.
-	•	Option A: Hairpinning through DC Ingress Gateway. Traffic leaves the Digital Channels domain, routes up to the DC Ingress Gateway (Border Control), and is proxied back down to the Payments Domain Gateway.
-	◦	Pros: Centralized visibility of all internal traffic.
-	◦	Cons: Severe Anti-Pattern. Creates a massive centralized bottleneck (the "ESB" trap). Introduces unnecessary latency ("tromboning" or "hairpinning") and couples internal domain availability to perimeter hardware.
-	•	Option B: Direct Point-to-Point. Services call each other directly, bypassing gateways.
-	◦	Pros: Zero routing latency.
-	◦	Cons: Spaghettification. No localized rate-limiting, no domain-level isolation, and completely decentralized trust.
-	•	Option C: Domain-to-Domain via Domain API Gateways (or Service Mesh). The Digital Channels Domain Gateway routes directly to the Payments Domain Gateway over the internal data center switching fabric.
-	◦	Pros: Enforces Domain-Driven Design (DDD) boundaries. Allows domains to set their own rate limits and internal SLAs. Prevents a localized domain failure from impacting the global perimeter.
-Recommendation: Option C (Domain-to-Domain via Domain API Gateways). Rationale: In a banking environment, we must compartmentalize blast radii. By routing East-West traffic exclusively through Domain Gateways (or an internal Service Mesh if running Kubernetes on-prem), we decouple internal transaction velocity from the perimeter. The DC Ingress Gateway must be reserved strictly for crossing physical security trust zones (Cloud to On-Prem, Partner to On-Prem, DC to DC). Traversal Path: Originating Domain Component → Originating Domain GW → Internal Network → Target Domain GW → Target Component.
-Use Case 5: South-North Egress (Legacy On-Prem to Cloud/External)
-Scenario: A Mainframe batch process or on-premises Core Banking module needs to call an external SaaS provider (e.g., Salesforce CRM) or a cloud-native Fraud Machine Learning Model hosted in our AWS Region West.
-	•	Option A: Direct Outbound via NAT / Forward Proxy. The Mainframe calls the internet or cloud directly via standard forward proxies (e.g., Squid/Bluecoat).
-	◦	Pros: Traditional, well-understood by legacy network teams.
-	◦	Cons: Lacks API-level observability. The Mainframe must manage its own OAuth client credentials and token lifecycles, which is an integration nightmare for COBOL/legacy systems.
-	•	Option B: Route through the DC Ingress Gateway. Use the existing Ingress Gateway for outbound traffic.
-	◦	Pros: Reuses existing infrastructure.
-	◦	Cons: Mixes trust zones. Ingress hardware optimized for WAF/DDoS is different from hardware optimized for outbound data loss prevention (DLP) and token caching.
-	•	Option C: Dedicated DC Egress API Gateway. Establish a distinct internal Egress Gateway dedicated to outbound API calls.
-	◦	Pros: The Egress Gateway handles the heavy lifting of modern authentication (e.g., executing the OAuth2 Client Credentials grant to get a JWT for AWS/SaaS) on behalf of the Mainframe. It enforces outbound rate limits and shields the legacy core from cloud timeouts via circuit breakers.
-Recommendation: Option C (Dedicated DC Egress API Gateway). Rationale: We cannot expect legacy Mainframes or monolithic Core Banking systems to gracefully handle modern API security protocols, retry logic, or circuit breaking. The Egress API Gateway acts as a Sidecar/Façade for the Datacenter. The Mainframe makes a simple, unauthenticated HTTP/mTLS call to the Egress Gateway; the Egress Gateway secures the token, attaches it, routes to the cloud/SaaS, and standardizes the response. Traversal Path:Mainframe → DC Egress Gateway (acquires token) → Egress Firewall → Direct Connect / Internet → Cloud Service.
+Slide 1: Acknowledging Reality - The "As-Is" State
+Title: Pragmatic Modernization: Bridging to the Target State
+Subtitle: Acknowledging our current constraints and planning a safe transition
+Current Constraints (The Reality Check):
+No Formal Domains: Packaged Business Capabilities (PBCs) and formal Domain-Driven boundaries are not yet established.
+Centralized Bottlenecks: API Gateways are currently operated as a centralized IT function, not federated to development teams.
+Heavy ESB Footprint: The enterprise relies on a monolithic ESB for heavy orchestration, data transformation, and legacy system connectivity.
+The Strategy:
+We will not attempt a "rip and replace" of the ESB.
+We will implement an "API Façade" pattern to decouple consumers from the legacy backend.
+We will use the Strangler Fig pattern at the Routing Layer to safely and incrementally migrate capabilities out of the ESB over time.
+Slide 2: Tactical Routing Pattern (The "Right Now")
+Title: Tactical Routing: The API Façade over Legacy ESB
+Scenario: How do we route hybrid cloud traffic today, knowing the ESB must do the heavy lifting?
+The Tactical Path:
+Cloud App → DC Ingress API Gateway (Centralized) → Central ESB → Legacy Core
+Why this is our Tactical Standard:
+Pros: Leverages existing ESB investments for protocol translation (e.g., REST to SOAP/MQ) and complex legacy orchestration. Requires zero immediate refactoring of backend code.
+Cons: The Central API Gateway and ESB remain dual bottlenecks. High risk of duplicating logic across both platforms.
+Critical Mitigation (The "Line in the Sand"):
+To prevent compounding our technical debt, we enforce a strict boundary:
+The API Gateway ONLY handles Security (OAuth, Rate Limiting, Threat Protection).
+The ESB ONLY handles Legacy Translation (Protocol mapping, orchestration).
+Rule: Absolutely no new business logic is allowed in either layer.
+Slide 3: The Strangler Fig Migration Path
+Title: The Strangler Fig Execution
+Subtitle: How we evolve from a Centralized ESB to Decentralized Domains
+Phase 1: Façade & Freeze (Months 1-6)
+Expose all legacy ESB endpoints as clean, RESTful APIs through the Central Ingress API Gateway.
+Action: Freeze the ESB. No net-new business capabilities are allowed to be built inside the ESB.
+Phase 2: Intercept & Branch (Months 6-12)
+Identify a "low-risk, high-value" capability (e.g., Customer Address Lookup) and rebuild it as a standalone microservice.
+Action: Update the Central API Gateway routing table. Path /api/v1/customer/address is routed to the new microservice. All other /api/v1/customer/* traffic continues to fall back to the ESB.
+Phase 3: Domain Decentralization (Months 12-24)
+As multiple microservices form a "Domain" (e.g., Customer Management), introduce the first lightweight Domain API Gateway to manage them.
+Action: The Central Ingress Gateway now routes traffic to the Domain Gateway instead of the ESB. The ESB is systematically starved of traffic.
+Slide 4: Mitigating the Centralized Gateway Risk
+Title: Operating a Centralized Gateway Safely
+Subtitle: Preventing the Gateway from becoming the "New ESB"
+While we rely on a centralized API Gateway team today, we must implement these guardrails to avoid slowing down time-to-market:
+Configuration as Code (GitOps):
+Network and routing rules must be managed in Git. Developers submit pull requests (PRs) with their routing needs (Swagger/OpenAPI specs), which the Gateway team approves, triggering automated deployment.
+"Dumb Pipes" Policy Enforcement:
+The Architecture Review Board (ARB) will reject any API design that attempts to use the Gateway for payload transformation (e.g., changing JSON structures) or multi-endpoint chaining.
+Federated Analytics:
+Even if the Gateway is centrally managed, logging and monitoring dashboards (e.g., Datadog, Splunk) must be filtered and federated back to the application developers so they can debug their own traffic.
