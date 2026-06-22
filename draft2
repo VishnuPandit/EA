@@ -1,0 +1,131 @@
+Architecture Decision Q&A: API Gateway Routing in Practice
+
+(Note: Throughout this document, "Cloud GW" and "DC GW" refer exclusively to the Cloud API Gateway and the Datacenter API Gateway at the Layer 7 application level, not network/routing gateways).
+
+1. Cloud API GW to DC API GW Authentication: Who authenticates whom?
+
+The Reality: Authentication happens at both layers, but they serve entirely different purposes. The Cloud API Gateway authenticates the external client, while the DC API Gateway authenticates the internal system passing the message.
+
+Phase 1: What gets authenticated at the Cloud API Gateway?
+The Cloud API Gateway acts as the bank's public front door. Its job is to authenticate the Originating Client (Mobile App, Web SPA, or external B2B Partner) before the request is allowed onto the private hybrid network.
+
+Public TLS Termination: It terminates the external SSL/TLS connection from the public internet.
+
+Subject (User/Client) Identity: It validates the incoming credential. For consumers, this means cryptographically verifying an OAuth 2.0 JWT (checking signature, issuer, audience, and expiry against the Identity Provider). For B2B partners, it may involve validating an API Key or external mTLS certificate.
+
+Edge Policy: It enforces global rate limits and coarse-grained scope checks (e.g., "Does this token have the payments:read scope?").
+
+Phase 2: What gets authenticated at the Datacenter API Gateway?
+Once the Cloud API Gateway approves the request, it proxies it down the private link (Direct Connect/ExpressRoute) to the DC API Gateway. The DC API Gateway authenticates both the system and the user, but treats them distinctly:
+
+System Identity (The "Who is knocking?"): The DC API Gateway must verify that the request is legitimately coming from our trusted Cloud API Gateway and not a compromised internal server that bypassed the cloud.
+
+How it's done: We use Mutual TLS (mTLS) over the private link. The Cloud API Gateway presents a client certificate issued by the bank's internal PKI. The DC API Gateway terminates the mTLS, validating the Cloud API Gateway's system identity.
+
+Subject Identity Context (The "On whose behalf?"): The Cloud API Gateway passes the validated client JWT down, or ideally, performs a Token Exchange (RFC 8693) to mint a short-lived, internal-only token.
+
+How it's done: The DC API Gateway extracts this token/header, logs the User ID for strict auditability (crucial for PCI/SOX), and enforces fine-grained internal authorization (e.g., "Does User X have access to Legacy Core Y?").
+
+Summary: The Cloud API GW authenticates the Public User. The DC API GW authenticates the Cloud API GW (via mTLS) and trusts the User Context passed inside the payload.
+
+2. DC-to-DC over Private Link: Why not direct Service-to-Service?
+
+The Reality: The concept of a "Trusted Zone" or a "Flat Internal Network" is dead. It is the exact vulnerability that allows ransomware to wipe out global banks in minutes.
+
+The Operational Nightmare ("Swiss Cheese"): If Service A (East) calls Service B (West) directly, network engineering has to open a specific firewall port mapping those two IPs. Next week, 50 new microservices deploy. Now you have thousands of point-to-point firewall rules spanning your WAN. It becomes un-auditable and unmaintainable.
+
+The "Blast Radius" Problem: Without an API gateway, Service A can accidentally DDoS Service B if a retry-loop bug occurs. A failure in East DC takes down West DC.
+
+The Solution: You route through the DC API Gateway to act as a Regional Bulkhead. The firewall only has one rule: allow traffic between the East API Gateway IP and West API Gateway IP. The API Gateway enforces cross-region mTLS and strict rate limits.
+
+Trade-off: You pay a 2-5ms latency penalty. In banking, we gladly pay 5ms to prevent a systemic cross-datacenter outage.
+
+3. Should I expose a West DC service via an East DC API Gateway?
+
+The Reality: No. This is an anti-pattern known as "Tromboning" or "Hairpinning."
+
+The Problem: If a client request comes into the East DC API Gateway, but the compute/database lives in West DC, the traffic has to travel down the internet to East, through the East security stack, across the expensive internal WAN link to West, hit the service, and travel all the way back.
+
+The Risk: You have tightly coupled the availability of West DC's compute to East DC's network hardware. If the East DC network drops, the West DC service is unreachable, even though West DC is perfectly healthy.
+
+The Exception (Active/Passive DR): The only time this is acceptable is during a Disaster Recovery scenario where West DC's internet ingress has failed, but its internal compute is surviving, and you are using East DC as a temporary emergency transit path. For steady-state architecture, always route traffic to the API gateway closest to the compute.
+
+4. Client Endpoint Abstraction: How to hide the DC from the client?
+
+The Reality: The client application (whether mobile, web, or cloud microservice) should never know if it is talking to East DC or West DC. It should never maintain a list of endpoints.
+
+The Solution: Use Global Server Load Balancing (GSLB) via Internal DNS (e.g., F5 BIG-IP GTM, InfoBlox, or AWS Route53 Private Hosted Zones).
+
+How it works:
+
+The client is configured with a single, vanity internal URL: https://api.internal.bank.com/payments.
+
+When the client does a DNS lookup, the GSLB intercepts it.
+
+The GSLB is constantly health-checking the DC Ingress API Gateways at both East DC and West DC.
+
+The GSLB uses a policy (e.g., Geo-proximity, Round-Robin, or Active/Passive) to return the IP address of the most appropriate Datacenter API Gateway.
+
+Failover: If East DC goes offline, the GSLB instantly stops returning the East IP. The client does a DNS retry, gets the West IP, and seamlessly connects. The client code never changes.
+
+5. Legacy Identity: How does the DC API GW pass identity to a Mainframe that doesn't understand JWTs?
+
+The Reality: You cannot pass a modern cryptographic JWT to a 30-year-old COBOL application.
+
+The Solution - "Credential Vaulting / Last-Mile Translation": The DC API Gateway acts as the translation layer.
+
+The DC API Gateway cryptographically verifies the internal JWT and extracts the user_id.
+
+The gateway makes a high-speed, localized call to an Enterprise Credential Vault (e.g., CyberArk, HashiCorp Vault) or a custom Identity Mapping Service.
+
+It retrieves the legacy credentials (e.g., a RACF ID and temporary password, or a static functional account paired with an X-Original-User header).
+
+It injects these legacy credentials into the payload or header (e.g., HTTP Basic Auth) and sends it over a strictly controlled mTLS tunnel to the Mainframe.
+
+Audit Rule: The mapping service must log this translation so auditors can trace the legacy RACF action back to the original JWT subject.
+
+6. Global Rate Limiting: How do we enforce quotas across Active-Active Datacenters?
+
+The Reality: If a B2B partner is limited to 100 API calls per second, and they split their traffic 50/50 across the East DC and West DC gateways, achieving perfectly synchronous global rate limiting will crush your API performance due to cross-datacenter latency (the CAP theorem in action).
+
+The Solution - "Asynchronous Eventual Consistency":
+
+Do not make synchronous cross-DC database calls to increment a counter.
+
+Use a distributed caching tier (e.g., Redis Enterprise Active-Active) attached to the API Gateways.
+
+The East DC gateway increments its local counter, and the West DC gateway increments its local counter. Redis synchronizes the state asynchronously in the background (usually within 10-50ms).
+
+The Trade-off: Accept a slight margin of error. A partner might successfully make 105 calls before the distributed limit kicks in and blocks them. In banking, we accept a 5% rate limit overage in exchange for sub-millisecond API routing performance.
+
+7. Payload Inspection & PCI-DSS: Should the API Gateway inspect the payload?
+
+The Reality: API Gateways are built for header-based routing and policy enforcement, not deep packet inspection or data masking.
+
+The Rule: Never log the payload at the API Gateway.
+
+The Rationale: If you configure the API Gateway to log full request/response payloads for debugging, you will inevitably log unencrypted PANs (Primary Account Numbers) or PII, immediately violating PCI-DSS and GDPR.
+
+The Solution:
+
+Threat Protection: Leave JSON/XML threat protection (SQLi, XSS) to the Cloud WAF, not the API Gateway.
+
+Data Masking: If payloads must be logged, the masking must happen at the application level before writing to standard out, or via a dedicated log shipper (e.g., Datadog/Splunk masking rules). The Gateway should only log metadata: HTTP verb, URL path, latency, status code, and the verified user_id.
+
+8. Synchronous vs. Event-Driven: When do we bypass the API Gateway?
+
+The Reality: Overusing synchronous APIs for high-volume data replication will take down your legacy core. Not everything should be an API.
+
+The Problem: If the Cloud CRM needs to know every time a customer's balance updates, having it poll a Datacenter API 10,000 times a second will exhaust Mainframe MIPS and cost the bank millions in licensing.
+
+The Solution - "CDC and Event Streaming":
+
+Bypass the synchronous API Gateway entirely for state-replication workloads.
+
+Implement Change Data Capture (CDC) at the Core Banking database level (e.g., using Debezium or IBM InfoSphere).
+
+Stream these changes asynchronously to a Kafka cluster spanning the hybrid link.
+
+The Cloud CRM consumes the Kafka topic.
+
+Rule of Thumb: Use the API Gateway for Commands (e.g., "Execute Payment") and Real-time Queries (e.g., "Get Balance Now"). Use Event Streams for State Synchronization and Notifications.
