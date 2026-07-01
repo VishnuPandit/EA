@@ -1,0 +1,110 @@
+Enterprise Integration & API Gateway Decision Guide
+
+Purpose: This guide empowers development and integration teams to choose the correct integration pattern and technology stack for new development and modernization efforts.
+
+The Golden Rule of the ARB:
+Gateways are for routing and security (Dumb Pipes).
+Microservices are for business logic and orchestration (Smart Endpoints).
+
+Part 1: The Integration Questionnaire
+
+Before requesting infrastructure or beginning development, answer the following questions regarding your specific service or API.
+
+1. Protocol & Payload Complexity
+
+[A] Does the integration require parsing proprietary legacy protocols (SNA, CICS, raw AS400 sockets, complex EBCDIC copybooks)?
+
+[B] Does the integration require heavy protocol translation (e.g., exposing a modern JSON/REST endpoint but calling a heavy SOAP/XML backend with WS-Security)?
+
+[C] Is the integration strictly modern (REST/JSON, gRPC, or async Events/Kafka) with minimal or no payload transformation?
+
+2. Orchestration & Business Logic (The "Experience")
+
+[A] Does the service need to orchestrate calls to 4+ different legacy databases, handle complex two-phase commits (distributed transactions), or execute heavy business rules in-flight?
+
+[B] Does the service need to aggregate 2-3 distinct APIs to create a single "Experience API" for a mobile app or web portal (e.g., fetching Account Balance + Recent Transactions in one call)?
+
+[C] Is the service simply retrieving or updating data within a single bounded context (e.g., only touching the Customer database)?
+
+3. Traffic Direction & Perimeter (The "Where")
+
+[A] Will this API be exposed to the public internet, external partners, or third-party Fintechs (Open Banking)?
+
+[B] Is this a cross-datacenter call (e.g., an app in the East DC needing to call a service in the West DC)?
+
+[C] Is this strictly internal East-West traffic (e.g., a modern Lending microservice calling a modern Customer microservice in the same Kubernetes cluster or Data Center)?
+
+4. Interaction Model & Temporal Coupling (Sync vs. Async)
+
+[A] Does the caller absolutely require an immediate, real-time response to proceed (e.g., "What is my current balance?", "Validate this biometric login")?
+
+[B] Is the caller notifying the bank of a state change where multiple downstream systems need to know, but the caller doesn't need to wait for them to finish (e.g., "Customer address updated," "Payment received")?
+
+Part 2: The Decision Matrix
+
+Based on your answers above, locate your target architecture below.
+
+Scenario 1: The "Heavy Legacy" Pattern
+
+If you answered mostly [A] to Question 1...
+You are dealing with legacy constraints that modern cloud-native tools are not designed to handle natively.
+
+Action (Tactical): Use the existing MuleSoft or Tibco BW ESB. Do not attempt to force Apigee or an Envoy gateway to parse AS400 copybooks.
+
+Action (Strategic): If you are actively modernizing this, you must build a dedicated Anti-Corruption Layer (ACL) Microservice in OpenShift to handle the translation, completely hiding the legacy complexity from the rest of the bank.
+
+Scenario 2: The "Perimeter & External" Pattern
+
+If you answered [A] or [B] to Question 3...
+You are crossing a high-risk security boundary.
+
+Action (Public Internet): You must route through the Layer 1 Cloud API Gateway. This ensures global WAF, DDoS protection, and external token validation.
+
+Action (Cross-Data Center): You must route through the Layer 2 DC Gateways (Broadcom Layer7 in East, Apigee in West). Cross-DC traffic must traverse the destination's perimeter gateway to satisfy InfoSec firewall and zone requirements.
+
+Scenario 3: The "Modern Composable" Pattern
+
+If you answered mostly [C] to Questions 1 & 3, and [A] to Question 4...
+You are building the future state of the bank. Keep it lightweight and synchronous.
+
+Action: Deploy your service to OpenShift (Kubernetes) exposing standard REST/gRPC.
+
+Gateway: Use the Layer 3 Domain Gateway (e.g., Envoy, Istio Ingress).
+
+Rule: The Domain Gateway will handle mTLS and cross-domain routing. Do not deploy this to MuleSoft. Do not route this up to Apigee/Layer7 unless it needs to leave the Data Center.
+
+Scenario 4: The "Experience/Orchestration" Pattern
+
+If you answered [B] to Question 2...
+You are building an API tailored for a specific user interface (Mobile, Web), known as a composite or "Experience API."
+
+Action: Build a Backend-For-Frontend (BFF) Microservice (e.g., using Spring Boot, Node.js, or Go) and deploy it to OpenShift. The BFF will make the 2-3 downstream calls, aggregate the JSON, and return it to the mobile app.
+
+Anti-Pattern (The Gateway Trap): Do not build this orchestration inside the API Gateway (Apigee/L7). Gateways are routers; writing JavaScript/Python callout scripts in Apigee to merge JSON arrays creates unmaintainable, untestable vendor lock-in.
+
+Anti-Pattern (The ESB Trap): Do not build UX orchestration in MuleSoft/Tibco. UX requirements change weekly; backend ESB release cycles take months. Keep front-end orchestration out of the heavy integration tier.
+
+Scenario 5: The Event-Driven (EDA) Pattern
+
+If you answered [B] to Question 4...
+You are handling state changes or broad notifications. Synchronous APIs will create cascading failures here.
+
+Action: Do not use REST APIs. The upstream service must publish an Event to an Event Broker (e.g., Apache Kafka, Confluent, or Solace).
+
+Rule: The publisher fires the event ("Payment Executed") and forgets it. The Fraud System, Rewards System, and Notification System subscribe to that topic and process it at their own pace.
+
+Gateway Implication: API Gateways are bypassed entirely for this internal async communication.
+
+Part 3: ARB Red Flags (Anti-Patterns to Avoid)
+
+If your design includes any of the following, the Architecture Review Board will reject it:
+
+"The Shiny ESB": Using the DC API Gateways (Apigee or Layer7) to execute data transformation (e.g., converting a massive XML payload to JSON using XSLT). Gateways are routers, not transformers.
+
+Hair-Pinning: Routing traffic from an internal OpenShift pod, out to the public Cloud API Gateway, just to call another internal OpenShift pod in the same datacenter.
+
+Lift and Shift ESB: Taking a massive, monolithic MuleSoft application and simply deploying it into a Kubernetes container without breaking it apart. Containerized technical debt is still technical debt.
+
+Bypassing the DC Edge: Attempting to route traffic directly from the Cloud into an internal Domain Gateway or VM, bypassing Broadcom L7 or Apigee. All North-South traffic into a physical data center must hit Layer 2.
+
+The Synchronous Chain of Death: Designing a transaction where Microservice A calls B, which calls C, which calls D synchronously via REST. If D is slow, A times out. Use Events (Kafka) or choreography for long-running workflows.
