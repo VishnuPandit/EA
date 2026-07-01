@@ -1,0 +1,89 @@
+Enterprise Integration & API Gateway Decision Guide
+
+Purpose: This guide empowers development and integration teams to choose the correct integration pattern and technology stack for new development and modernization efforts.
+
+The Golden Rule of the ARB:
+Gateways are for routing and security (Dumb Pipes).
+Microservices are for business logic and orchestration (Smart Endpoints).
+
+Part 1: The Integration Questionnaire
+
+Before requesting infrastructure or beginning development, answer the following questions regarding your specific service or API.
+
+1. Protocol & Payload Complexity
+
+[A] Does the integration require parsing proprietary legacy protocols (SNA, CICS, raw AS400 sockets, complex EBCDIC copybooks)?
+
+[B] Does the integration require heavy protocol translation (e.g., exposing a modern JSON/REST endpoint but calling a heavy SOAP/XML backend with WS-Security)?
+
+[C] Is the integration strictly modern (REST/JSON, gRPC, or async Events/Kafka) with minimal or no payload transformation?
+
+2. Orchestration & Business Logic
+
+[A] Does the service need to orchestrate calls to 4+ different legacy databases, handle complex two-phase commits (distributed transactions), or execute heavy business rules in-flight?
+
+[B] Does the service need to stitch together 2-3 APIs to create an "Experience API" for a mobile app, but contains no actual banking business logic?
+
+[C] Is the service simply retrieving or updating data within a single bounded context (e.g., only touching the Customer database)?
+
+3. Traffic Direction & Perimeter (The "Where")
+
+[A] Will this API be exposed to the public internet, external partners, or third-party Fintechs (Open Banking)?
+
+[B] Is this a cross-datacenter call (e.g., an app in the East DC needing to call a service in the West DC)?
+
+[C] Is this strictly internal East-West traffic (e.g., a modern Lending microservice calling a modern Customer microservice in the same Kubernetes cluster or Data Center)?
+
+Part 2: The Decision Matrix
+
+Based on your answers above, locate your target architecture below.
+
+Scenario 1: The "Heavy Legacy" Pattern
+
+If you answered mostly [A]...
+You are dealing with legacy constraints that modern cloud-native tools are not designed to handle natively.
+
+Action (Tactical): Use the existing MuleSoft or Tibco BW ESB. Do not attempt to force Apigee or an Envoy gateway to parse AS400 copybooks.
+
+Action (Strategic): If you are actively modernizing this, you must build a dedicated Anti-Corruption Layer (ACL) Microservice in OpenShift (using a framework like Apache Camel) to handle the translation, completely hiding the legacy complexity from the rest of the bank.
+
+Scenario 2: The "Perimeter & External" Pattern
+
+If you answered [A] or [B] to Question 3...
+You are crossing a high-risk security boundary.
+
+Action (Public Internet): You must route through the Layer 1 Cloud API Gateway. This ensures global WAF, DDoS protection, and external token validation.
+
+Action (Cross-Data Center): You must route through the Layer 2 DC Gateways (Broadcom Layer7 in East, Apigee in West). Cross-DC traffic must traverse the destination's perimeter gateway to satisfy InfoSec firewall and zone requirements.
+
+Scenario 3: The "Modern Composable" Pattern
+
+If you answered mostly [C]...
+You are building the future state of the bank. Keep it lightweight.
+
+Action: Deploy your service to OpenShift (Kubernetes).
+
+Gateway: Use the Layer 3 Domain Gateway (e.g., Envoy, Istio Ingress).
+
+Rule: The Domain Gateway will handle mTLS and cross-domain routing. Do not deploy this to MuleSoft. Do not route this up to Apigee/Layer7 unless it needs to leave the Data Center.
+
+Scenario 4: The "Experience/Orchestration" Pattern
+
+If you answered [B] to Question 2...
+You are building a composite API.
+
+Action: Build a Backend-For-Frontend (BFF) Microservice (e.g., using Spring Boot or Node.js) and deploy it to OpenShift.
+
+Anti-Pattern: Do not build this orchestration inside the API Gateway (Apigee/L7). Gateways should route, not execute JavaScript loops to merge JSON arrays. Do not build this in the ESB, as it adds unnecessary compute weight to the legacy tier.
+
+Part 3: ARB Red Flags (Anti-Patterns to Avoid)
+
+If your design includes any of the following, the Architecture Review Board will reject it:
+
+"The Shiny ESB": Using the DC API Gateways (Apigee or Layer7) to execute data transformation (e.g., converting a massive XML payload to JSON using XSLT). Gateways are routers, not transformers.
+
+Hair-Pinning: Routing traffic from an internal OpenShift pod, out to the public Cloud API Gateway, just to call another internal OpenShift pod in the same datacenter.
+
+Lift and Shift ESB: Taking a massive, monolithic MuleSoft application and simply deploying it into a Kubernetes container without breaking it apart. Containerized technical debt is still technical debt.
+
+Bypassing the DC Edge: Attempting to route traffic directly from the Cloud into an internal Domain Gateway or VM, bypassing Broadcom L7 or Apigee. All North-South traffic into a physical data center must hit Layer 2.
