@@ -1,3 +1,16 @@
+This document describes the repository structure and organization model for the Layer7 API Platform. The design aims to standardize:
+
+API proxy development lifecycle artifacts
+Reusable gateway API policy templates and gateway policy fragments
+Environment-specific API proxy configuration management
+API Documentation and API contract (defined by Open API specification or Swagger 2.0) management
+The structure separates concerns across multiple repositories to ensure:
+
+Reusability of shared components
+Clear ownership boundaries
+Support Graphman-based deployments
+Consistent API governance and operational maintenance.
+++++++++++++++++++++++++++++++++++++++++++++++
 Enterprise Integration & API Gateway Decision Guide
 
 Purpose: This guide empowers development and integration teams to choose the correct integration pattern and technology stack for new development and modernization efforts.
