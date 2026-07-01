@@ -1,0 +1,50 @@
+Enterprise Integration & API Decision Guide
+Target Audience: Solution Architects, Tech Leads, and Developers.
+Purpose: A deterministic decision tree to select the correct integration pattern, Gateway, or Event Broker for new initiatives, ensuring alignment with the bank's target Composable Architecture (BIAN).
+Part 1: The Questionnaire
+Answer these four questions regarding your specific integration requirement.
+Q1: Who is the primary consumer of this data/service?
+￼ A. External (Partners, Fintechs, Public Mobile App, Open Banking/PSD2).
+￼ B. Internal, Cross-Domain (e.g., Payments domain calling Lending domain).
+￼ C. Internal, Intra-Domain (e.g., Payment Validation calling Payment Execution).
+Q2: What is the nature of the target backend system or protocol?
+￼ A. Modern Cloud-Native (REST/JSON, gRPC).
+￼ B. Legacy/Mainframe (SOAP, XML, CICS, Copybook, IBM MQ).
+￼ C. File-based or massive Batch processing.
+Q3: Does this request require Orchestration or Data Aggregation?
+￼ A. Yes, Complex: Requires calling 3+ backends, applying business logic, state management, or complex data transformations.
+￼ B. Yes, Simple: Just aggregating fields from 2 APIs or simple JSON field filtering, no business logic.
+￼ C. No: It is a 1:1 pass-through to a single backend capability.
+Q4: What is the interaction pattern and state requirement?
+￼ A. Synchronous Read/Query (e.g., "Get Account Balance"). Caller needs an immediate response.
+￼ B. State Change Notification / Broadcast (e.g., "Payment Processed"). Multiple downstream systems need to know, but caller doesn't need to wait for them.
+￼ C. Distributed Transaction (e.g., Deduct from Account A, Add to Account B). Requires rollback if one fails.
+Part 2: The Deterministic Decision Matrix
+Use your answers from above to find your mandated architectural pattern.
+1. The Gateway Placement Rule (Based on Q1)
+￼ If Q1 = A (External): You MUST expose this through the Layer 1 Cloud API Gateway. It must be published in the External Developer Portal. Native OAuth2, WAF, and global rate-limiting apply.
+￼ If Q1 = B (Cross-Domain): You MUST expose this through a Layer 3 Domain Gateway (Envoy/Tyk). It requires mTLS and cross-domain audit logging. Do not route up to Layer 1 or Layer 2.
+￼ If Q1 = C (Intra-Domain): You MUST use the Layer 4 Service Mesh (Istio/Sidecars). Do not use an API Gateway. Traffic stays pod-to-pod within the namespace.
+2. The Legacy Integration Rule (Based on Q2)
+￼ If Q2 = A (Modern): Route directly via your Domain Gateway or Service Mesh. No translation needed.
+￼ If Q2 = B (Legacy): You MUST NOT expose this directly to a modern PBC.
+￼ Tactical Phase: You must route to the existing ESB (MuleSoft/Tibco).
+￼ Strategic Phase: You must build a dedicated Anti-Corruption Layer (ACL) microservice in Kubernetes to translate JSON to the legacy protocol.
+￼ If Q2 = C (Batch/File): Do NOT use an API Gateway. Use an enterprise Managed File Transfer (MFT) tool or a secure bulk-data pipeline (e.g., Spark/Kafka Connect). APIs are not for moving 5GB CSV files.
+3. The Orchestration & BFF Rule (Based on Q3)
+￼ If Q3 = A (Complex Orchestration): You MUST build a Backend-For-Frontend (BFF) or an Orchestration Microservice in Kubernetes (Java/Go/Node).
+￼ Anti-Pattern: Do NOT write JavaScript/XML policies inside Apigee, Broadcom, or MuleSoft to handle business logic. Gateways are "dumb pipes."
+￼ If Q3 = B (Simple Aggregation): You may use GraphQL via a federated graph, or use lightweight routing rules in the Domain Gateway.
+￼ If Q3 = C (Pass-through): Expose the BIAN PBC directly via the Domain Gateway. No intermediary service required.
+4. The Sync vs. Async (EDA) Rule (Based on Q4)
+￼ If Q4 = A (Sync Read): Use standard REST APIs (or gRPC for high performance). Route via the API Gateways discussed above.
+￼ If Q4 = B (State Change): You MUST NOT use REST APIs. You must use Event-Driven Architecture (EDA).
+￼ The producing service publishes a "Domain Event" (e.g., ⁠PaymentExecuted⁠) to the Enterprise Event Broker (Kafka).
+￼ Fraud, Rewards, and Notifications subscribe to this topic. The producing service does not know who is listening.
+￼ If Q4 = C (Distributed Transaction): You MUST NOT use two-phase commit (2PC) over REST APIs. Implement a Saga Pattern using asynchronous events (Kafka) or a dedicated workflow orchestration engine (e.g., Camunda/Temporal).
+Part 3: ARB "Red Flag" Anti-Patterns
+If your design includes any of the following, the ARB will reject it:
+1. "God Gateways": Writing data transformation (JSON to XML) or business rules inside Apigee or Broadcom Layer7.
+2. Hair-Pinning: Sending traffic from one internal Kubernetes pod out to the Cloud Edge Gateway just to route it back to the pod sitting next to it.
+3. Synchronous Chains of Death: Service A calls Service B (REST), which calls Service C (REST). If C is slow, A and B crash. Use Eventing (Kafka) or strict Circuit Breakers (Service Mesh).
+4. Bypassing the ACL: A modern frontend or mobile app attempting to send SOAP/XML directly to the mainframe.
